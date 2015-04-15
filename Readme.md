@@ -56,7 +56,7 @@ var mdast = require('mdast');
 Callback invoked when a heading is found.
 
 ```javascript
-function transform(start, nodes, end) {
+function onrun(start, nodes, end) {
     return [
         start,
         {
@@ -76,7 +76,7 @@ function transform(start, nodes, end) {
 Process a document.
 
 ```javascript
-var doc = mdast().use(heading('foo', transform)).process(
+var doc = mdast().use(heading('foo', onrun)).process(
     '# Foo\n' +
     '\n' +
     'Bar.\n' +

@@ -83,7 +83,7 @@ function isHeading(node) {
  * @return {boolean}
  */
 function isOpeningHeading(node, depth, test) {
-    return depth === null && isHeading(node) && test(toString(node));
+    return depth === null && isHeading(node) && test(toString(node), node);
 }
 
 /**
