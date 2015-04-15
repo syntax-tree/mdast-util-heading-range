@@ -1,0 +1,16 @@
+{
+  "name": "mdast-heading",
+  "version": "0.0.0",
+  "description": "Markdown heading as ranges in mdast",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "heading",
+    "range",
+    "mdast"
+  ],
+  "repository": "wooorm/mdast-heading",
+  "scripts": [
+    "index.js"
+  ]
+}

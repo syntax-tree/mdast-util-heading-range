@@ -1,0 +1,61 @@
+{
+  "name": "mdast-heading",
+  "version": "0.0.0",
+  "description": "Markdown heading as ranges in mdast",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "heading",
+    "range",
+    "mdast"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/mdast-zone.git"
+  },
+  "author": "Titus Wormer <tituswormer@gmail.com>",
+  "peerDependencies": {
+    "mdast": ">=0.18.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/mdast-heading.git"
+  },
+  "author": "Titus Wormer <tituswormer@gmail.com>",
+  "peerDependencies": {
+    "mdast": ">=0.18.0"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.0",
+    "chalk": "^1.0.0",
+    "diff": "^1.2.2",
+    "eslint": "^0.18.0",
+    "esmangle": "^1.0.0",
+    "istanbul": "^0.3.0",
+    "jscs": "^1.0.0",
+    "jscs-jsdoc": "^0.4.0",
+    "mdast": "^0.17.0",
+    "mdast-github": "^0.2.0",
+    "mdast-usage": "^0.2.0",
+    "mdast-yaml-config": "^0.1.0",
+    "mocha": "^2.0.0"
+  },
+  "scripts": {
+    "test-api": "mocha --check-leaks test.js",
+    "test-coveralls": "istanbul cover _mocha --report lcovonly -- --check-leaks test.js",
+    "test-coverage": "istanbul cover _mocha -- test.js",
+    "test-travis": "npm run test-coveralls",
+    "test": "npm run test-api",
+    "lint-api": "eslint index.js",
+    "lint-test": "eslint --env mocha test.js",
+    "lint-script": "eslint --rule strict:false example.js",
+    "lint-style": "jscs --reporter inline index.js test.js",
+    "lint": "npm run lint-api && npm run lint-test && npm run lint-script && npm run lint-style",
+    "make": "npm run lint && npm run test-coverage",
+    "bundle": "browserify index.js --no-builtins -s mdastHeading > mdast-heading.js",
+    "postbundle": "esmangle mdast-heading.js > mdast-heading.min.js",
+    "build-md": "mdast . -oq",
+    "build": "npm run bundle && npm run build-md",
+    "prepublish": "npm run build"
+  }
+}
