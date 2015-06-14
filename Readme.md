@@ -41,9 +41,13 @@ UMD (globals/AMD/CommonJS) ([uncompressed](mdast-heading.js) and [compressed](md
 ## Table of Contents
 
 *   [Usage](#usage)
+
 *   [API](#api)
+
     *   [heading(test, onrun)](#headingtest-onrun)
+
         *   [function onrun(start, nodes, end?, scope)](#function-onrunstart-nodes-end-scope)
+
 *   [License](#license)
 
 ## Usage
