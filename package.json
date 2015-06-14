@@ -11,14 +11,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wooorm/mdast-zone.git"
-  },
-  "author": "Titus Wormer <tituswormer@gmail.com>",
-  "peerDependencies": {
-    "mdast": ">=0.18.0"
-  },
-  "repository": {
-    "type": "git",
     "url": "https://github.com/wooorm/mdast-heading.git"
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
@@ -36,8 +28,9 @@
     "jscs-jsdoc": "^1.0.0",
     "mdast": "^0.22.0",
     "mdast-github": "^0.3.0",
-    "mdast-usage": "^0.3.0",
+    "mdast-lint": "^0.2.0",
     "mdast-toc": "^0.4.0",
+    "mdast-usage": "^0.3.0",
     "mdast-yaml-config": "^0.2.0",
     "mocha": "^2.0.0"
   },
@@ -53,7 +46,7 @@
     "make": "npm run lint && npm run test-coverage",
     "bundle": "browserify index.js --no-builtins -s mdastHeading > mdast-heading.js",
     "postbundle": "esmangle mdast-heading.js > mdast-heading.min.js",
-    "build-md": "mdast . -oq",
+    "build-md": "mdast . --output --quiet",
     "build": "npm run bundle && npm run build-md",
     "prepublish": "npm run build"
   }

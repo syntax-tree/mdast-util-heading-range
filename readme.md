@@ -7,19 +7,19 @@ Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 [npm](https://docs.npmjs.com/cli/install):
 
 ```bash
-$ npm install mdast-heading
+npm install mdast-heading
 ```
 
 [Component.js](https://github.com/componentjs/component):
 
 ```bash
-$ component install wooorm/mdast-heading
+component install wooorm/mdast-heading
 ```
 
 [Bower](http://bower.io/#install-packages):
 
 ```bash
-$ bower install mdast-heading
+bower install mdast-heading
 ```
 
 [Duo](http://duojs.org/#getting-started):
@@ -103,14 +103,24 @@ Qux.
 
 ### heading(test, onrun)
 
-Transform part of a document without affecting other parts, by changing a section: a heading which passes `test`, until the next heading of the same or lower depth, or the end of the document.
+Transform part of a document without affecting other parts, by changing a
+section: a heading which passes `test`, until the next heading of the same
+or lower depth, or the end of the document.
 
 **Parameters**
 
-*   `test` (`string`, `RegExp`, `function(string, Node): boolean`) — Heading to look for:
-    *   When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
-    *   Then, when `RegExp`, wrapped in `function (value) {expression.test(value)}`.
-*   [`onrun`](#function-onrunstart-nodes-end-scope) (`Array.<Node>? = function (start, nodes, end)`) — Callback invoked when a range is found.
+*   `test` (`string`, `RegExp`, `function(string, Node): boolean`)
+    — Heading to look for:
+
+    *   When `string`, wrapped in
+        `new RegExp('^(' + value + ')$', 'i')`;
+
+    *   Then, when `RegExp`, wrapped in
+        `function (value) {expression.test(value)}`.
+
+*   [`onrun`](#function-onrunstart-nodes-end-scope)
+    (`Array.<Node>? = function (start, nodes, end)`)
+    — Callback invoked when a range is found.
 
 **Returns**
 
@@ -121,16 +131,21 @@ Transform part of a document without affecting other parts, by changing a sectio
 **Parameters**
 
 *   `start` (`Heading`) — Start of range;
+
 *   `nodes` (`Array.<Node>`) — Nodes between `start` and `end`;
+
 *   `end` (`Heading?`) — End of range, if any.
+
 *   `scope` (`Object`):
+
     *   `parent` (`Node`) — Parent of the range;
     *   `start` (`number`) — Index of `start` in `parent`;
     *   `end` (`number?`) — Index of `end` in `parent`.
 
 **Returns**
 
-`Array.<Node>?` — Zero or more nodes to replace the range (including `start`, and `end`) with.
+`Array.<Node>?` — Zero or more nodes to replace the range (including
+`start`, and `end`) with.
 
 ## License
 

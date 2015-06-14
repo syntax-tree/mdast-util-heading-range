@@ -3,6 +3,8 @@ mdast:
   setext: true
 ---
 
+<!--lint disable no-multiple-toplevel-headings-->
+
 0.1.1 / 2015-04-15
 ==================
 
