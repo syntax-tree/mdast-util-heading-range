@@ -1,6 +1,6 @@
 {
   "name": "mdast-heading",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Markdown heading as ranges in mdast",
   "license": "MIT",
   "keywords": [
