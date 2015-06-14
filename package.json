@@ -14,6 +14,10 @@
     "url": "https://github.com/wooorm/mdast-heading.git"
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
+  "files": [
+    "index.js",
+    "LICENSE"
+  ],
   "peerDependencies": {
     "mdast": ">=0.22.0"
   },
