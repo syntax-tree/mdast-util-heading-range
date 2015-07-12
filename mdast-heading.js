@@ -2,6 +2,12 @@
 'use strict';
 
 /*
+ * Dependencies.
+ */
+
+var toString = require('mdast-util-to-string');
+
+/*
  * Methods.
  */
 
@@ -35,32 +41,6 @@ function wrapExpression(expression) {
     }
 
     return assertion;
-}
-
-/**
- * Get the value of `node`.
- *
- * @param {Node} node
- * @return {string}
- */
-function getValue(node) {
-    return node &&
-        (node.value ? node.value :
-        (node.alt ? node.alt : node.title)) || '';
-}
-
-/**
- * Returns the text content of a node.
- * Checks `alt` or `title` when no value or children
- * exist.
- *
- * @param {Node} node
- * @return {string}
- */
-function toString(node) {
-    return getValue(node) ||
-        (node.children && node.children.map(toString).join('')) ||
-        '';
 }
 
 /**
@@ -194,6 +174,49 @@ function wrapper(heading, callback) {
  */
 
 module.exports = wrapper;
+
+},{"mdast-util-to-string":2}],2:[function(require,module,exports){
+/**
+ * @author Titus Wormer
+ * @copyright 2015 Titus Wormer. All rights reserved.
+ * @module mdast-util-to-string
+ * @fileoverview Utility to get the text value of a node.
+ */
+
+'use strict';
+
+/**
+ * Get the value of `node`.  Checks, `value`,
+ * `alt`, and `title`, in that order.
+ *
+ * @param {Node} node - Node to get the internal value of.
+ * @return {string} - Textual representation.
+ */
+function valueOf(node) {
+    return node &&
+        (node.value ? node.value :
+        (node.alt ? node.alt : node.title)) || '';
+}
+
+/**
+ * Returns the text content of a node.  If the node itself
+ * does not expose plain-text fields, `toString` will
+ * recursivly try its children.
+ *
+ * @param {Node} node - Node to transform to a string.
+ * @return {string} - Textual representation.
+ */
+function toString(node) {
+    return valueOf(node) ||
+        (node.children && node.children.map(toString).join('')) ||
+        '';
+}
+
+/*
+ * Expose.
+ */
+
+module.exports = toString;
 
 },{}]},{},[1])(1)
 });
