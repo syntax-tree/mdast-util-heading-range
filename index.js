@@ -1,6 +1,12 @@
 'use strict';
 
 /*
+ * Dependencies.
+ */
+
+var toString = require('mdast-util-to-string');
+
+/*
  * Methods.
  */
 
@@ -34,32 +40,6 @@ function wrapExpression(expression) {
     }
 
     return assertion;
-}
-
-/**
- * Get the value of `node`.
- *
- * @param {Node} node
- * @return {string}
- */
-function getValue(node) {
-    return node &&
-        (node.value ? node.value :
-        (node.alt ? node.alt : node.title)) || '';
-}
-
-/**
- * Returns the text content of a node.
- * Checks `alt` or `title` when no value or children
- * exist.
- *
- * @param {Node} node
- * @return {string}
- */
-function toString(node) {
-    return getValue(node) ||
-        (node.children && node.children.map(toString).join('')) ||
-        '';
 }
 
 /**

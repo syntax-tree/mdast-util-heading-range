@@ -9,6 +9,9 @@
     "range",
     "mdast"
   ],
+  "dependencies": {
+    "wooorm/mdast-util-to-string": "~0.1.0"
+  },
   "repository": "wooorm/mdast-heading",
   "scripts": [
     "index.js"
