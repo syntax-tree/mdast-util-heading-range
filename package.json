@@ -51,7 +51,6 @@
     "bundle": "browserify index.js --no-builtins -s mdastHeading > mdast-heading.js",
     "postbundle": "esmangle mdast-heading.js > mdast-heading.min.js",
     "build-md": "mdast . --output --quiet",
-    "build": "npm run bundle && npm run build-md",
-    "prepublish": "npm run build"
+    "build": "npm run bundle && npm run build-md"
   }
 }
