@@ -18,9 +18,6 @@
     "index.js",
     "LICENSE"
   ],
-  "peerDependencies": {
-    "mdast": ">=0.22.0"
-  },
   "devDependencies": {
     "browserify": "^10.0.0",
     "chalk": "^1.0.0",
