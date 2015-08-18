@@ -10,33 +10,10 @@ Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 npm install mdast-heading
 ```
 
-[Component.js](https://github.com/componentjs/component):
-
-```bash
-component install wooorm/mdast-heading
-```
-
-[Bower](http://bower.io/#install-packages):
-
-```bash
-bower install mdast-heading
-```
-
-[Duo](http://duojs.org/#getting-started):
-
-```javascript
-var heading = require('wooorm/mdast-heading');
-```
-
-UMD (globals/AMD/CommonJS) ([uncompressed](mdast-heading.js) and [compressed](mdast-heading.min.js)):
-
-```html
-<script src="path/to/mdast.js"></script>
-<script src="path/to/mdast-heading.js"></script>
-<script>
-  mdast.use(mdastHeading);
-</script>
-```
+**mdast-heading** is also available for [bower](http://bower.io/#install-packages),
+[component](https://github.com/componentjs/component), and
+[duo](http://duojs.org/#getting-started), and as an AMD, CommonJS, and globals
+module, [uncompressed](mdast-heading.js) and [compressed](mdast-heading.min.js).
 
 ## Table of Contents
 
