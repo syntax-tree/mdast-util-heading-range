@@ -49,7 +49,7 @@ function process(value, options) {
  * Tests.
  */
 
-describe('mdast-heading()', function () {
+describe('mdast-util-heading-range()', function () {
     it('should be a function', function () {
         equal(typeof heading, 'function');
     });
@@ -59,7 +59,7 @@ describe('mdast-heading()', function () {
  * Tests.
  */
 
-describe('mdast-heading(heading, callback)', function () {
+describe('mdast-util-heading-range(heading, callback)', function () {
     it('should accept a heading as string', function () {
         equal(process(
             '# Fo\n' +

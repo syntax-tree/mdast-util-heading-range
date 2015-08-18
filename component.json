@@ -1,5 +1,5 @@
 {
-  "name": "mdast-heading",
+  "name": "mdast-util-heading-range",
   "version": "1.0.0",
   "description": "Markdown heading as ranges in mdast",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "dependencies": {
     "wooorm/mdast-util-to-string": "^1.0.0"
   },
-  "repository": "wooorm/mdast-heading",
+  "repository": "wooorm/mdast-util-heading-range",
   "scripts": [
     "index.js"
   ]

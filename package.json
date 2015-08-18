@@ -1,5 +1,5 @@
 {
-  "name": "mdast-heading",
+  "name": "mdast-util-heading-range",
   "version": "1.0.0",
   "description": "Markdown heading as ranges in mdast",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "dependencies": {
     "mdast-util-to-string": "^1.0.0"
   },
-  "repository": "wooorm/mdast-heading",
+  "repository": "wooorm/mdast-util-heading-range",
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "files": [
     "index.js"
@@ -42,8 +42,8 @@
     "lint-style": "jscs --reporter inline .",
     "lint": "npm run lint-api && npm run lint-style",
     "make": "npm run lint && npm run test-coverage",
-    "bundle": "browserify index.js --no-builtins -s mdastHeading > mdast-heading.js",
-    "postbundle": "esmangle mdast-heading.js > mdast-heading.min.js",
+    "bundle": "browserify index.js --no-builtins -s mdastUtilHeadingRange > mdast-util-heading-range.js",
+    "postbundle": "esmangle mdast-util-heading-range.js > mdast-util-heading-range.min.js",
     "build-md": "mdast . --output --quiet",
     "build": "npm run bundle && npm run build-md"
   }

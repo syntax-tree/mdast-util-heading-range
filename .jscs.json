@@ -6,8 +6,8 @@
     "node_modules/",
     "build.js",
     "example.js",
-    "mdast-heading.js",
-    "mdast-heading.min.js"
+    "mdast-util-heading-range.js",
+    "mdast-util-heading-range.min.js"
   ],
   "jsDoc": {
     "checkAnnotations": "jsdoc3",

@@ -1,6 +1,6 @@
 {
-  "name": "mdast-heading",
-  "main": "mdast-heading.js",
+  "name": "mdast-util-heading-range",
+  "main": "mdast-util-heading-range.js",
   "description": "Markdown heading as ranges in mdast",
   "license": "MIT",
   "keywords": [
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wooorm/mdast-heading.git"
+    "url": "https://github.com/wooorm/mdast-util-heading-range.git"
   },
   "authors": [
     "Titus Wormer <tituswormer@gmail.com>"

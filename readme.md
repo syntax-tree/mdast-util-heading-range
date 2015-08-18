@@ -1,4 +1,4 @@
-# mdast-heading [![Build Status](https://img.shields.io/travis/wooorm/mdast-heading.svg)](https://travis-ci.org/wooorm/mdast-heading) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/mdast-heading.svg)](https://codecov.io/github/wooorm/mdast-heading)
+# mdast-util-heading-range [![Build Status](https://img.shields.io/travis/wooorm/mdast-util-heading-range.svg)](https://travis-ci.org/wooorm/mdast-util-heading-range) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/mdast-util-heading-range.svg)](https://codecov.io/github/wooorm/mdast-util-heading-range)
 
 Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 
@@ -7,13 +7,13 @@ Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 [npm](https://docs.npmjs.com/cli/install):
 
 ```bash
-npm install mdast-heading
+npm install mdast-util-heading-range
 ```
 
-**mdast-heading** is also available for [bower](http://bower.io/#install-packages),
+**mdast-util-heading-range** is also available for [bower](http://bower.io/#install-packages),
 [component](https://github.com/componentjs/component), and
 [duo](http://duojs.org/#getting-started), and as an AMD, CommonJS, and globals
-module, [uncompressed](mdast-heading.js) and [compressed](mdast-heading.min.js).
+module, [uncompressed](mdast-util-heading-range.js) and [compressed](mdast-util-heading-range.min.js).
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ module, [uncompressed](mdast-heading.js) and [compressed](mdast-heading.min.js).
 ## Usage
 
 ```javascript
-var heading = require('mdast-heading');
+var heading = require('mdast-util-heading-range');
 var mdast = require('mdast');
 ```
 
