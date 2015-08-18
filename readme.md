@@ -1,4 +1,4 @@
-# mdast-heading [![Build Status](https://img.shields.io/travis/wooorm/mdast-heading.svg?style=flat)](https://travis-ci.org/wooorm/mdast-heading) [![Coverage Status](https://img.shields.io/coveralls/wooorm/mdast-heading.svg?style=flat)](https://coveralls.io/r/wooorm/mdast-heading?branch=master)
+# mdast-heading [![Build Status](https://img.shields.io/travis/wooorm/mdast-heading.svg)](https://travis-ci.org/wooorm/mdast-heading) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/mdast-heading.svg)](https://codecov.io/github/wooorm/mdast-heading)
 
 Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 
