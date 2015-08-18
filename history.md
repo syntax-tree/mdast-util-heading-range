@@ -2,6 +2,12 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+1.0.0 / 2015-08-18
+==================
+
+*   Refactor to make installation section smaller ([b5699e5](https://github.com/wooorm/mdast-heading/commit/b5699e5))
+*   Update dependencies, dev-dependencies ([25f00b9](https://github.com/wooorm/mdast-heading/commit/25f00b9))
+
 0.1.3 / 2015-07-12
 ==================
 
