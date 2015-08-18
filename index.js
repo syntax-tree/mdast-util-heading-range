@@ -15,7 +15,7 @@ var splice = [].splice;
 /**
  * Transform a string into an applicable expression.
  *
- * @param {string} value
+ * @param {string} value - Value to transform.
  * @return {RegExp}
  */
 function toExpression(value) {
@@ -25,14 +25,14 @@ function toExpression(value) {
 /**
  * Wrap an expression into an assertion function.
  *
- * @param {RegExp} expression
+ * @param {RegExp} expression - Expression to test.
  * @return {Function}
  */
 function wrapExpression(expression) {
     /**
      * Assert `value` matches the bound `expression`.
      *
-     * @param {string} value
+     * @param {string} value - Value to check.
      * @return {boolean}
      */
     function assertion(value) {
@@ -45,7 +45,7 @@ function wrapExpression(expression) {
 /**
  * Check if `node` is a heading.
  *
- * @param {Node} node
+ * @param {Node} node - Node to check.
  * @return {boolean}
  */
 function isHeading(node) {
@@ -55,9 +55,9 @@ function isHeading(node) {
 /**
  * Check if `node` is the main heading.
  *
- * @param {Node} node
- * @param {number?} depth
- * @param {function(string): boolean} test
+ * @param {Node} node - Node to check.
+ * @param {number?} depth - Depth to search for.
+ * @param {function(string): boolean} test - Tester.
  *
  * @return {boolean}
  */
@@ -68,8 +68,8 @@ function isOpeningHeading(node, depth, test) {
 /**
  * Check if `node` is the next heading.
  *
- * @param {Node} node
- * @param {number?} depth
+ * @param {Node} node - Node to check.
+ * @param {number?} depth - Depth of the opening heading.
  * @return {boolean}
  */
 function isClosingHeading(node, depth) {
@@ -79,9 +79,10 @@ function isClosingHeading(node, depth) {
 /**
  * Search a node for heading range.
  *
- * @param {Node} root
- * @param {Function} test
- * @param {Function} callback
+ * @param {Node} root - Node to search.
+ * @param {Function} test - Assertion.
+ * @param {Function} callback - Callback invoked when
+ *   found.
  */
 function search(root, test, callback) {
     var index = -1;
@@ -132,8 +133,10 @@ function search(root, test, callback) {
 /**
  * Wrapper.
  *
- * @param {string|RegExp|Function} heading
- * @param {Function} callback
+ * @param {string|RegExp|Function} heading - Heading to
+ *   search for.
+ * @param {Function} callback - Callback invoked when
+ *   found.
  * @return {function(node)}
  */
 function wrapper(heading, callback) {
@@ -152,7 +155,7 @@ function wrapper(heading, callback) {
      * `test`, up until the following closing with
      * equal or higher depth.
      *
-     * @param {Node} node
+     * @param {Node} node - Node to search in.
      */
     function transformer(node) {
         search(node, test, callback);

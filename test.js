@@ -10,19 +10,25 @@ var heading = require('./');
 var mdast = require('mdast');
 var assert = require('assert');
 
+/*
+ * Methods.
+ */
+
+var equal = assert.strictEqual;
+
 /**
  * Sample plugin which removes everything between
  * a heading named `name` (default: foo) and a following,
  * higher level heading.
  *
- * @param {MDAST} processor
- * @param {string} name
+ * @param {MDAST} processor - Instance
+ * @param {string} name - Example TOC name.
  */
 function remover(processor, name) {
     processor.use(heading(name || 'foo', function (start, nodes, end, scope) {
-        assert(typeof scope.start === 'number');
+        equal(typeof scope.start, 'number');
         assert(typeof scope.end === 'number' || scope.end === null);
-        assert(scope.parent.type === 'root');
+        equal(scope.parent.type, 'root');
 
         return [start].concat(end ? [end] : []);
     }));
@@ -31,12 +37,12 @@ function remover(processor, name) {
 /**
  * Shortcut to process.
  *
- * @param {string} value
- * @param {string?} name
+ * @param {string} value - Value to process.
+ * @param {*} options - configuration.
  * @return {string}
  */
-function process(value, name) {
-    return mdast().use(remover, name).process(value);
+function process(value, options) {
+    return mdast().use(remover, options).process(value);
 }
 
 /*
@@ -45,7 +51,7 @@ function process(value, name) {
 
 describe('mdast-heading()', function () {
     it('should be a function', function () {
-        assert(typeof heading === 'function');
+        equal(typeof heading, 'function');
     });
 });
 
@@ -55,7 +61,7 @@ describe('mdast-heading()', function () {
 
 describe('mdast-heading(heading, callback)', function () {
     it('should accept a heading as string', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -64,7 +70,7 @@ describe('mdast-heading(heading, callback)', function () {
             '\n' +
             '# Fo\n',
             'foo+'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -74,7 +80,7 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should accept a heading as an expression', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -83,7 +89,7 @@ describe('mdast-heading(heading, callback)', function () {
             '\n' +
             '# Fo\n',
             /foo+/i
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -100,7 +106,7 @@ describe('mdast-heading(heading, callback)', function () {
             return value.toLowerCase().indexOf('foo') === 0;
         }
 
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -109,7 +115,7 @@ describe('mdast-heading(heading, callback)', function () {
             '\n' +
             '# Fo\n',
             assertion
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## Fooooo\n' +
@@ -119,13 +125,13 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should accept a missing closing heading', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## Foo\n' +
             '\n' +
             'Bar\n'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## Foo\n'
@@ -133,7 +139,7 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should accept images', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## ![Foo](bar.png)\n' +
@@ -141,7 +147,7 @@ describe('mdast-heading(heading, callback)', function () {
             'Bar\n' +
             '\n' +
             '## Baz\n'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## ![Foo](bar.png)\n' +
@@ -151,7 +157,7 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should accept links', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## [Foo](bar.com)\n' +
@@ -159,7 +165,7 @@ describe('mdast-heading(heading, callback)', function () {
             'Bar\n' +
             '\n' +
             '## Baz\n'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## [Foo](bar.com)\n' +
@@ -169,7 +175,7 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should accept an image in a link', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             '## [![](./bar.png "foo")](bar.com)\n' +
@@ -177,7 +183,7 @@ describe('mdast-heading(heading, callback)', function () {
             'Bar\n' +
             '\n' +
             '## Baz\n'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             '## [![](./bar.png "foo")](bar.com)\n' +
@@ -187,13 +193,13 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should not fail without heading', function () {
-        assert(process(
+        equal(process(
             '# Fo\n' +
             '\n' +
             'Bar\n' +
             '\n' +
             '## Baz\n'
-        ) ===
+        ),
             '# Fo\n' +
             '\n' +
             'Bar\n' +
@@ -203,13 +209,13 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should not fail with empty headings', function () {
-        assert(process(
+        equal(process(
             '## \n' +
             '\n' +
             '# Foo\n' +
             '\n' +
             'Baz\n'
-        ) ===
+        ),
             '## \n' +
             '\n' +
             '# Foo\n'
@@ -217,9 +223,9 @@ describe('mdast-heading(heading, callback)', function () {
     });
 
     it('should not fail without nodes', function () {
-        assert(process(
+        equal(process(
             '# Foo\n'
-        ) ===
+        ),
             '# Foo\n'
         );
     });
@@ -229,8 +235,8 @@ describe('mdast-heading(heading, callback)', function () {
             processor.use(heading('foo', function () {
                 return null;
             }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, doc) {
-            assert(doc === 'Foo\n\n## Foo\n\nBar\n');
+        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
+            equal(doc, 'Foo\n\n## Foo\n\nBar\n');
 
             done(exception);
         });
@@ -241,8 +247,8 @@ describe('mdast-heading(heading, callback)', function () {
             processor.use(heading('foo', function () {
                 return [];
             }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, doc) {
-            assert(doc === 'Foo\n');
+        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
+            equal(doc, 'Foo\n');
 
             done(exception);
         });
@@ -257,8 +263,8 @@ describe('mdast-heading(heading, callback)', function () {
                     }
                 ];
             }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, doc) {
-            assert(doc === 'Foo\n\n* * *\n');
+        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
+            equal(doc, 'Foo\n\n* * *\n');
 
             done(exception);
         });

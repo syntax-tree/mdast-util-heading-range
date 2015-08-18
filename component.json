@@ -10,7 +10,7 @@
     "mdast"
   ],
   "dependencies": {
-    "wooorm/mdast-util-to-string": "~0.1.0"
+    "wooorm/mdast-util-to-string": "^1.0.0"
   },
   "repository": "wooorm/mdast-heading",
   "scripts": [
