@@ -248,23 +248,25 @@ describe('mdast-util-heading-range(heading, callback)', function () {
                 return [];
             }));
         }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
-            equal(doc, 'Foo\n');
-
             done(exception);
+
+            equal(doc, 'Foo\n');
         });
     });
 
     it('should insert all returned nodes', function (done) {
         mdast().use(function (processor) {
-            processor.use(heading('foo', function () {
+            processor.use(heading('foo', function (start, nodes, end) {
                 return [
+                    start,
                     {
                         'type': 'horizontalRule'
-                    }
+                    },
+                    end
                 ];
             }));
         }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
-            equal(doc, 'Foo\n\n* * *\n');
+            equal(doc, 'Foo\n\n## Foo\n\n* * *\n');
 
             done(exception);
         });
