@@ -2,6 +2,11 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+1.0.1 / 2015-08-19
+==================
+
+*   Fix bug ([689f250](https://github.com/wooorm/mdast-util-heading-range/commit/689f250))
+
 1.0.0 / 2015-08-18
 ==================
 
