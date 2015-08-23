@@ -2,6 +2,11 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+1.0.2 / 2015-08-23
+==================
+
+*   Fix bug where nodes were passed incorrectly ([4b036e4](https://github.com/wooorm/mdast-util-heading-range/commit/4b036e4))
+
 1.0.1 / 2015-08-19
 ==================
 
