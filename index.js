@@ -116,7 +116,7 @@ function search(root, test, callback) {
 
         nodes = callback(
             children[start],
-            children.slice(start + 1, end - start + 1),
+            children.slice(start + 1, end),
             children[end],
             {
                 'parent': root,
