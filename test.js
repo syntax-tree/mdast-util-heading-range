@@ -223,11 +223,7 @@ describe('mdast-util-heading-range(heading, callback)', function () {
     });
 
     it('should not fail without nodes', function () {
-        equal(process(
-            '# Foo\n'
-        ),
-            '# Foo\n'
-        );
+        equal(process('# Foo\n'), '# Foo\n');
     });
 
     it('should not remove anything when `null` is given', function (done) {
@@ -275,14 +271,13 @@ describe('mdast-util-heading-range(heading, callback)', function () {
     it('should call back with the correct number of children', function (done) {
         var seen;
         mdast().use(function (processor) {
-            processor.use(heading('foo', function (start, nodes, end) {
+            processor.use(heading('foo', function (start, nodes) {
                 seen = nodes;
                 return null;
             }));
-        }).process('a\n\na\n\na\n\na\n\na\n\n## Foo\n\none\n\ntwo\n\nthree\n\n## Bar', function (exception, file, doc) {
+        }).process('a\n\na\n\na\n\na\n\na\n\n## Foo\n\none\n\ntwo\n\nthree\n\n## Bar', function (exception) {
             equal(seen.length, 3);
             done(exception);
         });
     });
-
 });
