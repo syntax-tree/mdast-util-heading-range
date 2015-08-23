@@ -271,4 +271,18 @@ describe('mdast-util-heading-range(heading, callback)', function () {
             done(exception);
         });
     });
+
+    it('should call back with the correct number of children', function (done) {
+        var seen;
+        mdast().use(function (processor) {
+            processor.use(heading('foo', function (start, nodes, end) {
+                seen = nodes;
+                return null;
+            }));
+        }).process('a\n\na\n\na\n\na\n\na\n\n## Foo\n\none\n\ntwo\n\nthree\n\n## Bar', function (exception, file, doc) {
+            equal(seen.length, 3);
+            done(exception);
+        });
+    });
+
 });
