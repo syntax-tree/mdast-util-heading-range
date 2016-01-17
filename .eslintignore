@@ -1,7 +1,5 @@
-build/
 components/
 coverage/
-build.js
 example.js
 mdast-util-heading-range.js
 mdast-util-heading-range.min.js
