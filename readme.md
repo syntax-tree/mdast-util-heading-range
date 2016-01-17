@@ -11,7 +11,8 @@ npm install mdast-util-heading-range
 ```
 
 **mdast-util-heading-range** is also available for [duo](http://duojs.org/#getting-started),
-and as an AMD, CommonJS, and globals module, [uncompressed](mdast-util-heading-range.js) and [compressed](mdast-util-heading-range.min.js).
+and as an AMD, CommonJS, and globals module, [uncompressed and
+compressed](https://github.com/wooorm/mdast-util-heading-range/releases).
 
 ## Table of Contents
 

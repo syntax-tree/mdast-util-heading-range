@@ -8,3 +8,18 @@ node_js:
 - iojs
 sudo: false
 after_script: npm install codecov.io && cat ./coverage/lcov.info | codecov
+deploy:
+  - provider: npm
+    email: tituswormer@gmail.com
+    api_key:
+      secure: Tvys9puncttZicY3RDRQdfaiqjA50S4kXN0VO5y61GZnXA9jqqkII7z76OeJxzPq0Bp8UUHMOA+Lf8iGMowkLUuexE/a1tzLUMVIctskqMC1dJPEeKn1A1LOH3tkCJCe0Xs6bLF/XtJ0Sd/kVJjkGAAPS/erjYHZNNXv+ksQT1Y=
+    on:
+      tags: true
+  - provider: releases
+    api_key:
+      secure: wwCPWGftSTLvwgxgGZCg39K9otbNDHj8slxffh/MTJT/pWYKnBqufQfe6WcCs06c5z6kTddKS7E/ao7jwVlB5/8pIlMzR9cSnCMpJtmh8mFJPSMEMuM4dOVuntNCS58iei7O3PZHuJmQxZY5r6Zrk2egAcsgsDzV6959rxrS3WI=
+    file:
+      - "mdast-util-heading-range.js"
+      - "mdast-util-heading-range.min.js"
+    on:
+      tags: true
