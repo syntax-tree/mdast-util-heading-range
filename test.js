@@ -23,19 +23,21 @@ var heading = require('./');
  *
  * @param {Object} t - Test.
  * @param {string} value - Value to process.
- * @param {*} options - configuration.
+ * @param {*} name - Configuration.
  * @return {string} - Processed value.
  */
-function process(t, value, options) {
-    return remark().use(function (processor, name) {
-        processor.use(heading(name, function (start, nodes, end, scope) {
-            t.equal(typeof scope.start, 'number');
-            t.assert(typeof scope.end === 'number' || scope.end === null);
-            t.equal(scope.parent.type, 'root');
+function process(t, value, name) {
+    return remark().use(function () {
+        return function (node) {
+            heading(node, name, function (start, nodes, end, scope) {
+                t.equal(typeof scope.start, 'number');
+                t.assert(typeof scope.end === 'number' || scope.end === null);
+                t.equal(scope.parent.type, 'root');
 
-            return [start].concat(end ? [end] : []);
-        }));
-    }, options).process(value);
+                return [start].concat(end ? [end] : []);
+            });
+        };
+    }).process(value);
 }
 
 /*
@@ -241,10 +243,12 @@ test('mdast-util-heading-range()', function (t) {
         'should not fail with empty headings'
     );
 
-    remark().use(function (processor) {
-        processor.use(heading('foo', function () {
-            return null;
-        }));
+    remark().use(function () {
+        return function (node) {
+            heading(node, 'foo', function () {
+                return null;
+            });
+        };
     }).process([
         'Foo',
         '',
@@ -265,10 +269,12 @@ test('mdast-util-heading-range()', function (t) {
         ].join('\n'), 'should not remove anything when `null` is given');
     });
 
-    remark().use(function (processor) {
-        processor.use(heading('foo', function () {
-            return [];
-        }));
+    remark().use(function () {
+        return function (node) {
+            heading(node, 'foo', function () {
+                return [];
+            });
+        };
     }).process([
         'Foo',
         '',
@@ -285,16 +291,18 @@ test('mdast-util-heading-range()', function (t) {
         ].join('\n'), 'should replace all previous nodes otherwise');
     });
 
-    remark().use(function (processor) {
-        processor.use(heading('foo', function (start, nodes, end) {
-            return [
-                start,
-                {
-                    'type': 'horizontalRule'
-                },
-                end
-            ];
-        }));
+    remark().use(function () {
+        return function (node) {
+            heading(node, 'foo', function (start, nodes, end) {
+                return [
+                    start,
+                    {
+                        'type': 'horizontalRule'
+                    },
+                    end
+                ];
+            });
+        };
     }).process([
         'Foo',
         '',
@@ -319,12 +327,14 @@ test('mdast-util-heading-range()', function (t) {
         ].join('\n'), 'should insert all returned nodes');
     });
 
-    remark().use(function (processor) {
-        processor.use(heading('foo', function (start, nodes, end) {
-            t.equal(nodes.length, 3);
+    remark().use(function () {
+        return function (node) {
+            heading(node, 'foo', function (start, nodes, end) {
+                t.equal(nodes.length, 3);
 
-            return [start].concat(nodes, end);
-        }));
+                return [start].concat(nodes, end);
+            });
+        };
     }).process([
         '# Alpha',
         '',

@@ -159,15 +159,15 @@ function search(root, test, callback) {
 }
 
 /**
- * Wrapper.
+ * Search `node` for `heading` and invoke `callback`.
  *
+ * @param {Node} node - Node to search in.
  * @param {string|RegExp|Function} heading - Heading to
  *   search for.
  * @param {Function} callback - Callback invoked when
  *   found.
- * @return {function(node)} - Attacher.
  */
-function wrapper(heading, callback) {
+function headingRange(node, heading, callback) {
     var test = heading;
 
     if (typeof test === 'string') {
@@ -178,29 +178,11 @@ function wrapper(heading, callback) {
         test = wrapExpression(test);
     }
 
-    /**
-     * Find a range based on a starting heading matching
-     * `test`, up until the following closing with
-     * equal or higher depth.
-     *
-     * @param {Node} node - Node to search in.
-     */
-    function transformer(node) {
-        search(node, test, callback);
-    }
-
-    /**
-     * `Attacher`.
-     */
-    function attacher() {
-        return transformer;
-    }
-
-    return attacher;
+    search(node, test, callback);
 }
 
 /*
  * Expose.
  */
 
-module.exports = wrapper;
+module.exports = headingRange;

@@ -21,36 +21,36 @@ var heading = require('mdast-util-heading-range');
 var remark = require('remark');
 ```
 
-Callback invoked when a heading is found.
-
-```javascript
-function onrun(start, nodes, end) {
-    return [
-        start,
-        {
-            'type': 'paragraph',
-            'children': [
-                {
-                    'type': 'text',
-                    'value': 'Qux.'
-                }
-            ]
-        },
-        end
-    ];
-}
-```
-
 Process a document.
 
 ```javascript
-var doc = remark().use(heading('foo', onrun)).process(
-    '# Foo\n' +
-    '\n' +
-    'Bar.\n' +
-    '\n' +
-    '# Baz\n'
-);
+var doc = remark()
+    .use(function () {
+        return function (node) {
+            heading(node, 'foo', function (start, nodes, end) {
+                return [
+                    start,
+                    {
+                        'type': 'paragraph',
+                        'children': [
+                            {
+                                'type': 'text',
+                                'value': 'Qux.'
+                            }
+                        ]
+                    },
+                    end
+                ];
+            });
+        }
+    }).process([
+        '# Foo',
+        '',
+        'Bar.',
+        '',
+        '# Baz',
+        ''
+    ].join('\n'));
 ```
 
 Yields:
@@ -65,13 +65,15 @@ Qux.
 
 ## API
 
-### heading(test, onrun)
+### `heading(node, test, onrun)`
 
 Transform part of a document without affecting other parts, by changing a
 section: a heading which passes `test`, until the next heading of the same
 or lower depth, or the end of the document.
 
 **Parameters**
+
+*   `node` ([`Node`][mdast-node]) — Node to search;
 
 *   `test` (`string`, `RegExp`, `function(string, Node): boolean`)
     — Heading to look for:
@@ -86,11 +88,7 @@ or lower depth, or the end of the document.
     (`Array.<Node>? = function (start, nodes, end)`)
     — Callback invoked when a range is found.
 
-**Returns**
-
-`Function` — Should be passed to [`mdast.use()`](https://github.com/wooorm/mdast#mdastuseplugin-options).
-
-#### function onrun(start, nodes, end?, scope)
+#### `function onrun(start, nodes, end?, scope)`
 
 **Parameters**
 
@@ -126,6 +124,8 @@ or lower depth, or the end of the document.
 [coverage]: https://codecov.io/github/wooorm/mdast-util-heading-range
 
 [mdast]: https://github.com/wooorm/mdast
+
+[mdast-node]: https://github.com/wooorm/mdast#node
 
 [npm-install]: https://docs.npmjs.com/cli/install
 
