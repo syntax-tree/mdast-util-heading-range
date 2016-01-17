@@ -2,6 +2,15 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+2.0.0 / 2016-01-17
+==================
+
+*   Update API to remove remark dependency ([`3edfeee`](https://github.com/wooorm/mdast-util-heading-range/commit/3edfeee))
+*   Remove support for bower ([`36a4733`](https://github.com/wooorm/mdast-util-heading-range/commit/36a4733))
+*   Refactor npm test target ([`c5bc9ae`](https://github.com/wooorm/mdast-util-heading-range/commit/c5bc9ae))
+*   Refactor to replace mocha with tape ([`4cf70ce`](https://github.com/wooorm/mdast-util-heading-range/commit/4cf70ce))
+*   Update `mdast` to `remark` ([`6df612d`](https://github.com/wooorm/mdast-util-heading-range/commit/6df612d))
+
 1.0.2 / 2015-08-23
 ==================
 
