@@ -31,7 +31,7 @@ module, [uncompressed](mdast-util-heading-range.js) and [compressed](mdast-util-
 
 ```javascript
 var heading = require('mdast-util-heading-range');
-var mdast = require('mdast');
+var remark = require('remark');
 ```
 
 Callback invoked when a heading is found.
@@ -57,7 +57,7 @@ function onrun(start, nodes, end) {
 Process a document.
 
 ```javascript
-var doc = mdast().use(heading('foo', onrun)).process(
+var doc = remark().use(heading('foo', onrun)).process(
     '# Foo\n' +
     '\n' +
     'Bar.\n' +

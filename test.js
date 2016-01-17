@@ -7,7 +7,7 @@
  */
 
 var heading = require('./');
-var mdast = require('mdast');
+var remark = require('remark');
 var assert = require('assert');
 
 /*
@@ -42,7 +42,7 @@ function remover(processor, name) {
  * @return {string}
  */
 function process(value, options) {
-    return mdast().use(remover, options).process(value);
+    return remark().use(remover, options).process(value);
 }
 
 /*
@@ -227,7 +227,7 @@ describe('mdast-util-heading-range(heading, callback)', function () {
     });
 
     it('should not remove anything when `null` is given', function (done) {
-        mdast().use(function (processor) {
+        remark().use(function (processor) {
             processor.use(heading('foo', function () {
                 return null;
             }));
@@ -239,7 +239,7 @@ describe('mdast-util-heading-range(heading, callback)', function () {
     });
 
     it('should replace all previous nodes otherwise', function (done) {
-        mdast().use(function (processor) {
+        remark().use(function (processor) {
             processor.use(heading('foo', function () {
                 return [];
             }));
@@ -251,7 +251,7 @@ describe('mdast-util-heading-range(heading, callback)', function () {
     });
 
     it('should insert all returned nodes', function (done) {
-        mdast().use(function (processor) {
+        remark().use(function (processor) {
             processor.use(heading('foo', function (start, nodes, end) {
                 return [
                     start,
@@ -270,7 +270,7 @@ describe('mdast-util-heading-range(heading, callback)', function () {
 
     it('should call back with the correct number of children', function (done) {
         var seen;
-        mdast().use(function (processor) {
+        remark().use(function (processor) {
             processor.use(heading('foo', function (start, nodes) {
                 seen = nodes;
                 return null;
