@@ -1,30 +1,18 @@
-# mdast-util-heading-range [![Build Status](https://img.shields.io/travis/wooorm/mdast-util-heading-range.svg)](https://travis-ci.org/wooorm/mdast-util-heading-range) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/mdast-util-heading-range.svg)](https://codecov.io/github/wooorm/mdast-util-heading-range)
+# mdast-util-heading-range [![Build Status][travis-badge]][travis] [![Coverage Status][coverage-badge]][coverage]
 
-Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
+Markdown heading as ranges in [**mdast**][mdast].
 
 ## Installation
 
-[npm](https://docs.npmjs.com/cli/install):
+[npm][npm-install]:
 
 ```bash
 npm install mdast-util-heading-range
 ```
 
-**mdast-util-heading-range** is also available for [duo](http://duojs.org/#getting-started),
-and as an AMD, CommonJS, and globals module, [uncompressed and
-compressed](https://github.com/wooorm/mdast-util-heading-range/releases).
-
-## Table of Contents
-
-*   [Usage](#usage)
-
-*   [API](#api)
-
-    *   [heading(test, onrun)](#headingtest-onrun)
-
-        *   [function onrun(start, nodes, end?, scope)](#function-onrunstart-nodes-end-scope)
-
-*   [License](#license)
+**mdast-util-heading-range** is also available for [duo][],
+and as an AMD, CommonJS, and globals module,
+[uncompressed and compressed][releases].
 
 ## Usage
 
@@ -125,4 +113,26 @@ or lower depth, or the end of the document.
 
 ## License
 
-[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
+[MIT][license] © [Titus Wormer][home]
+
+<!-- Definitions -->
+
+[travis-badge]: https://img.shields.io/travis/wooorm/mdast-util-heading-range.svg
+
+[travis]: https://travis-ci.org/wooorm/mdast-util-heading-range
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/wooorm/mdast-util-heading-range.svg
+
+[coverage]: https://codecov.io/github/wooorm/mdast-util-heading-range
+
+[mdast]: https://github.com/wooorm/mdast
+
+[npm-install]: https://docs.npmjs.com/cli/install
+
+[duo]: http://duojs.org/#getting-started
+
+[releases]: https://github.com/wooorm/mdast-util-heading-range/releases
+
+[license]: LICENSE
+
+[home]: http://wooorm.com
