@@ -1,283 +1,354 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2015 Titus Wormer
+ * @license MIT
+ * @module mdast:util:heading-range:script
+ * @fileoverview Markdown heading as ranges in mdast.
+ */
+
 'use strict';
 
-/* eslint-env mocha */
+/* eslint-env node */
 
 /*
  * Dependencies.
  */
 
-var heading = require('./');
+var test = require('tape');
 var remark = require('remark');
-var assert = require('assert');
-
-/*
- * Methods.
- */
-
-var equal = assert.strictEqual;
-
-/**
- * Sample plugin which removes everything between
- * a heading named `name` (default: foo) and a following,
- * higher level heading.
- *
- * @param {MDAST} processor - Instance
- * @param {string} name - Example TOC name.
- */
-function remover(processor, name) {
-    processor.use(heading(name || 'foo', function (start, nodes, end, scope) {
-        equal(typeof scope.start, 'number');
-        assert(typeof scope.end === 'number' || scope.end === null);
-        equal(scope.parent.type, 'root');
-
-        return [start].concat(end ? [end] : []);
-    }));
-}
+var heading = require('./');
 
 /**
  * Shortcut to process.
  *
+ * @param {Object} t - Test.
  * @param {string} value - Value to process.
  * @param {*} options - configuration.
  * @return {string}
  */
-function process(value, options) {
-    return remark().use(remover, options).process(value);
+function process(t, value, options) {
+    return remark().use(function (processor, name) {
+        processor.use(heading(name, function (start, nodes, end, scope) {
+            t.equal(typeof scope.start, 'number');
+            t.assert(typeof scope.end === 'number' || scope.end === null);
+            t.equal(scope.parent.type, 'root');
+
+            return [start].concat(end ? [end] : []);
+        }));
+    }, options).process(value);
 }
 
 /*
  * Tests.
  */
 
-describe('mdast-util-heading-range()', function () {
-    it('should be a function', function () {
-        equal(typeof heading, 'function');
-    });
-});
+test('mdast-util-heading-range()', function (t) {
+    t.plan(43);
 
-/*
- * Tests.
- */
+    t.equal(typeof heading, 'function', 'should be a function');
 
-describe('mdast-util-heading-range(heading, callback)', function () {
-    it('should accept a heading as string', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '# Fo\n',
-            'foo+'
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            '# Fo\n'
-        );
-    });
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept a heading as string'
+    );
 
-    it('should accept a heading as an expression', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '# Fo\n',
-            /foo+/i
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            '# Fo\n'
-        );
-    });
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), /foo+/i),
+        [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept a heading as a regex'
+    );
 
-    it('should accept a heading as a function', function () {
-        /**
-         * Assertion.
-         */
-        function assertion(value) {
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), function (value) {
             return value.toLowerCase().indexOf('foo') === 0;
-        }
+        }),
+        [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept a heading as a function'
+    );
 
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '# Fo\n',
-            assertion
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## Fooooo\n' +
-            '\n' +
-            '# Fo\n'
-        );
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## Fooooo',
+            '',
+            'Bar',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## Fooooo',
+            ''
+        ].join('\n'),
+        'should accept a missing closing heading'
+    );
+
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## ![Foo](bar.png)',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## ![Foo](bar.png)',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept images'
+    );
+
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## [Foo](bar.com)',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## [Foo](bar.com)',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept links'
+    );
+
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## [![Foo](bar.png)](bar.com)',
+            '',
+            'Bar',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## [![Foo](bar.png)](bar.com)',
+            '',
+            '# Fo',
+            ''
+        ].join('\n'),
+        'should accept an image in a link'
+    );
+
+    t.equal(
+        process(t, [
+            '# Fo',
+            '',
+            '## Bar',
+            '',
+            'Baz',
+            ''
+        ].join('\n'), 'foo+'),
+        [
+            '# Fo',
+            '',
+            '## Bar',
+            '',
+            'Baz',
+            ''
+        ].join('\n'),
+        'should not fail without heading'
+    );
+
+    t.equal(
+        process(t, [
+            '# ',
+            '',
+            '## Foo',
+            '',
+            'Bar',
+            '',
+            '## Baz',
+            ''
+        ].join('\n'), 'fo+'),
+        [
+            '# ',
+            '',
+            '## Foo',
+            '',
+            '## Baz',
+            ''
+        ].join('\n'),
+        'should not fail with empty headings'
+    );
+
+    remark().use(function (processor) {
+        processor.use(heading('foo', function () {
+            return null;
+        }));
+    }).process([
+        'Foo',
+        '',
+        '## Foo',
+        '',
+        'Bar',
+        ''
+    ].join('\n'), function (err, file, doc) {
+        t.ifError(err, 'should not fail (#1)');
+
+        t.equal(doc, [
+            'Foo',
+            '',
+            '## Foo',
+            '',
+            'Bar',
+            ''
+        ].join('\n'), 'should not remove anything when `null` is given');
     });
 
-    it('should accept a missing closing heading', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## Foo\n' +
-            '\n' +
-            'Bar\n'
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## Foo\n'
-        );
+    remark().use(function (processor) {
+        processor.use(heading('foo', function () {
+            return [];
+        }));
+    }).process([
+        'Foo',
+        '',
+        '## Foo',
+        '',
+        'Bar',
+        ''
+    ].join('\n'), function (err, file, doc) {
+        t.ifError(err, 'should not fail (#2)');
+
+        t.equal(doc, [
+            'Foo',
+            ''
+        ].join('\n'), 'should replace all previous nodes otherwise');
     });
 
-    it('should accept images', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## ![Foo](bar.png)\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '## Baz\n'
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## ![Foo](bar.png)\n' +
-            '\n' +
-            '## Baz\n'
-        );
+    remark().use(function (processor) {
+        processor.use(heading('foo', function (start, nodes, end) {
+            return [
+                start,
+                {
+                    'type': 'horizontalRule'
+                },
+                end
+            ];
+        }));
+    }).process([
+        'Foo',
+        '',
+        '## Foo',
+        '',
+        'Bar',
+        '',
+        '## Baz',
+        ''
+    ].join('\n'), function (err, file, doc) {
+        t.ifError(err, 'should not fail (#3)');
+
+        t.equal(doc, [
+            'Foo',
+            '',
+            '## Foo',
+            '',
+            '* * *',
+            '',
+            '## Baz',
+            ''
+        ].join('\n'), 'should insert all returned nodes');
     });
 
-    it('should accept links', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## [Foo](bar.com)\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '## Baz\n'
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## [Foo](bar.com)\n' +
-            '\n' +
-            '## Baz\n'
-        );
-    });
+    remark().use(function (processor) {
+        processor.use(heading('foo', function (start, nodes, end) {
+            t.equal(nodes.length, 3);
+            return [start].concat(nodes, end)
+        }));
+    }).process([
+        '# Alpha',
+        '',
+        '## Foo',
+        '',
+        'one',
+        '',
+        'two',
+        '',
+        'three',
+        ''
+    ].join('\n'), function (err, file, doc) {
+        t.ifError(err, 'should not fail (#4)');
 
-    it('should accept an image in a link', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            '## [![](./bar.png "foo")](bar.com)\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '## Baz\n'
-        ),
-            '# Fo\n' +
-            '\n' +
-            '## [![](./bar.png "foo")](bar.com)\n' +
-            '\n' +
-            '## Baz\n'
-        );
-    });
-
-    it('should not fail without heading', function () {
-        equal(process(
-            '# Fo\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '## Baz\n'
-        ),
-            '# Fo\n' +
-            '\n' +
-            'Bar\n' +
-            '\n' +
-            '## Baz\n'
-        );
-    });
-
-    it('should not fail with empty headings', function () {
-        equal(process(
-            '## \n' +
-            '\n' +
-            '# Foo\n' +
-            '\n' +
-            'Baz\n'
-        ),
-            '## \n' +
-            '\n' +
-            '# Foo\n'
-        );
-    });
-
-    it('should not fail without nodes', function () {
-        equal(process('# Foo\n'), '# Foo\n');
-    });
-
-    it('should not remove anything when `null` is given', function (done) {
-        remark().use(function (processor) {
-            processor.use(heading('foo', function () {
-                return null;
-            }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
-            equal(doc, 'Foo\n\n## Foo\n\nBar\n');
-
-            done(exception);
-        });
-    });
-
-    it('should replace all previous nodes otherwise', function (done) {
-        remark().use(function (processor) {
-            processor.use(heading('foo', function () {
-                return [];
-            }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
-            done(exception);
-
-            equal(doc, 'Foo\n');
-        });
-    });
-
-    it('should insert all returned nodes', function (done) {
-        remark().use(function (processor) {
-            processor.use(heading('foo', function (start, nodes, end) {
-                return [
-                    start,
-                    {
-                        'type': 'horizontalRule'
-                    },
-                    end
-                ];
-            }));
-        }).process('Foo\n\n## Foo\n\nBar\n', function (exception, file, doc) {
-            equal(doc, 'Foo\n\n## Foo\n\n* * *\n');
-
-            done(exception);
-        });
-    });
-
-    it('should call back with the correct number of children', function (done) {
-        var seen;
-        remark().use(function (processor) {
-            processor.use(heading('foo', function (start, nodes) {
-                seen = nodes;
-                return null;
-            }));
-        }).process('a\n\na\n\na\n\na\n\na\n\n## Foo\n\none\n\ntwo\n\nthree\n\n## Bar', function (exception) {
-            equal(seen.length, 3);
-            done(exception);
-        });
+        t.equal(doc, [
+            '# Alpha',
+            '',
+            '## Foo',
+            '',
+            'one',
+            '',
+            'two',
+            '',
+            'three',
+            ''
+        ].join('\n'), 'should not insert an empty `end`');
     });
 });
