@@ -10,7 +10,7 @@ Markdown heading as ranges in [**mdast**](https://github.com/wooorm/mdast).
 npm install mdast-util-heading-range
 ```
 
-**mdast-util-heading-range** is also available for [bower](http://bower.io/#install-packages),
+**mdast-util-heading-range** is also available for
 [component](https://github.com/componentjs/component), and
 [duo](http://duojs.org/#getting-started), and as an AMD, CommonJS, and globals
 module, [uncompressed](mdast-util-heading-range.js) and [compressed](mdast-util-heading-range.min.js).
