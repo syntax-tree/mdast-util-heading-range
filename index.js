@@ -1,4 +1,14 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2015 Titus Wormer
+ * @license MIT
+ * @module mdast:util:heading-range
+ * @fileoverview Markdown heading as ranges in mdast.
+ */
+
 'use strict';
+
+/* eslint-env commonjs */
 
 /*
  * Dependencies.
@@ -16,7 +26,7 @@ var splice = [].splice;
  * Transform a string into an applicable expression.
  *
  * @param {string} value - Value to transform.
- * @return {RegExp}
+ * @return {RegExp} - Expression.
  */
 function toExpression(value) {
     return new RegExp('^(' + value + ')$', 'i');
@@ -26,14 +36,14 @@ function toExpression(value) {
  * Wrap an expression into an assertion function.
  *
  * @param {RegExp} expression - Expression to test.
- * @return {Function}
+ * @return {Function} - Assertion.
  */
 function wrapExpression(expression) {
     /**
      * Assert `value` matches the bound `expression`.
      *
      * @param {string} value - Value to check.
-     * @return {boolean}
+     * @return {boolean} - Whether `value` matches.
      */
     function assertion(value) {
         return expression.test(value);
@@ -46,7 +56,7 @@ function wrapExpression(expression) {
  * Check if `node` is a heading.
  *
  * @param {Node} node - Node to check.
- * @return {boolean}
+ * @return {boolean} - Whether `node` is a heading.
  */
 function isHeading(node) {
     return node && node.type === 'heading';
@@ -58,8 +68,8 @@ function isHeading(node) {
  * @param {Node} node - Node to check.
  * @param {number?} depth - Depth to search for.
  * @param {function(string): boolean} test - Tester.
- *
- * @return {boolean}
+ * @return {boolean} - Whether `node` is an opening
+ *   heading.
  */
 function isOpeningHeading(node, depth, test) {
     return depth === null && isHeading(node) && test(toString(node), node);
@@ -70,7 +80,8 @@ function isOpeningHeading(node, depth, test) {
  *
  * @param {Node} node - Node to check.
  * @param {number?} depth - Depth of the opening heading.
- * @return {boolean}
+ * @return {boolean} - Whether `node` is a closing
+ *   heading.
  */
 function isClosingHeading(node, depth) {
     return depth && isHeading(node) && node.depth <= depth;
@@ -154,7 +165,7 @@ function search(root, test, callback) {
  *   search for.
  * @param {Function} callback - Callback invoked when
  *   found.
- * @return {function(node)}
+ * @return {function(node)} - Attacher.
  */
 function wrapper(heading, callback) {
     var test = heading;

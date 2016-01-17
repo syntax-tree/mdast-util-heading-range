@@ -3,7 +3,7 @@
  * @copyright 2015 Titus Wormer
  * @license MIT
  * @module mdast:util:heading-range:script
- * @fileoverview Markdown heading as ranges in mdast.
+ * @fileoverview Test suite for `mdast-util-heading-range`.
  */
 
 'use strict';
@@ -24,7 +24,7 @@ var heading = require('./');
  * @param {Object} t - Test.
  * @param {string} value - Value to process.
  * @param {*} options - configuration.
- * @return {string}
+ * @return {string} - Processed value.
  */
 function process(t, value, options) {
     return remark().use(function (processor, name) {
@@ -322,7 +322,8 @@ test('mdast-util-heading-range()', function (t) {
     remark().use(function (processor) {
         processor.use(heading('foo', function (start, nodes, end) {
             t.equal(nodes.length, 3);
-            return [start].concat(nodes, end)
+
+            return [start].concat(nodes, end);
         }));
     }).process([
         '# Alpha',
