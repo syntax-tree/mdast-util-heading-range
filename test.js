@@ -37,7 +37,7 @@ function process(t, value, name) {
                 return [start].concat(end ? [end] : []);
             });
         };
-    }).process(value);
+    }).process(value).toString();
 }
 
 /*
@@ -256,10 +256,10 @@ test('mdast-util-heading-range()', function (t) {
         '',
         'Bar',
         ''
-    ].join('\n'), function (err, file, doc) {
+    ].join('\n'), function (err, file) {
         t.ifError(err, 'should not fail (#1)');
 
-        t.equal(doc, [
+        t.equal(String(file), [
             'Foo',
             '',
             '## Foo',
@@ -282,10 +282,10 @@ test('mdast-util-heading-range()', function (t) {
         '',
         'Bar',
         ''
-    ].join('\n'), function (err, file, doc) {
+    ].join('\n'), function (err, file) {
         t.ifError(err, 'should not fail (#2)');
 
-        t.equal(doc, [
+        t.equal(String(file), [
             'Foo',
             ''
         ].join('\n'), 'should replace all previous nodes otherwise');
@@ -297,7 +297,7 @@ test('mdast-util-heading-range()', function (t) {
                 return [
                     start,
                     {
-                        'type': 'horizontalRule'
+                        'type': 'thematicBreak'
                     },
                     end
                 ];
@@ -312,10 +312,10 @@ test('mdast-util-heading-range()', function (t) {
         '',
         '## Baz',
         ''
-    ].join('\n'), function (err, file, doc) {
+    ].join('\n'), function (err, file) {
         t.ifError(err, 'should not fail (#3)');
 
-        t.equal(doc, [
+        t.equal(String(file), [
             'Foo',
             '',
             '## Foo',
@@ -346,10 +346,10 @@ test('mdast-util-heading-range()', function (t) {
         '',
         'three',
         ''
-    ].join('\n'), function (err, file, doc) {
+    ].join('\n'), function (err, file) {
         t.ifError(err, 'should not fail (#4)');
 
-        t.equal(doc, [
+        t.equal(String(file), [
             '# Alpha',
             '',
             '## Foo',

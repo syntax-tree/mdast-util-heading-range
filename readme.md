@@ -55,12 +55,8 @@ var doc = remark()
 
 Yields:
 
-```markdown
-# Foo
-
-Qux.
-
-# Baz
+```javascript
+console.log('markdown', doc);
 ```
 
 ## API
