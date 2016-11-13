@@ -1,7 +1,5 @@
 # mdast-util-heading-range [![Build Status][build-badge]][build-status] [![Coverage Status][coverage-badge]][coverage-status] [![Chat][chat-badge]][chat]
 
-<!--lint disable list-item-spacing heading-increment no-duplicate-headings-->
-
 Markdown heading as ranges in [**MDAST**][mdast].
 
 ## Installation
@@ -11,9 +9,6 @@ Markdown heading as ranges in [**MDAST**][mdast].
 ```bash
 npm install mdast-util-heading-range
 ```
-
-**mdast-util-heading-range** is also available as an AMD, CommonJS, and
-globals module, [uncompressed and compressed][releases].
 
 ## Usage
 
@@ -107,8 +102,6 @@ Callback invoked when a range is found.
 [chat-badge]: https://img.shields.io/gitter/room/wooorm/remark.svg
 
 [chat]: https://gitter.im/wooorm/remark
-
-[releases]: https://github.com/wooorm/mdast-util-heading-range/releases
 
 [license]: LICENSE
 
