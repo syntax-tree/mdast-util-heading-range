@@ -1,13 +1,8 @@
 language: node_js
 node_js:
-- '0.11'
-- '0.12'
 - '4.0'
-- '5.0'
-- '6.0'
-sudo: false
-after_success:
-- bash <(curl -s https://codecov.io/bash)
+- '7.0'
+after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
   - provider: npm
     email: tituswormer@gmail.com
@@ -15,7 +10,7 @@ deploy:
       secure: Tvys9puncttZicY3RDRQdfaiqjA50S4kXN0VO5y61GZnXA9jqqkII7z76OeJxzPq0Bp8UUHMOA+Lf8iGMowkLUuexE/a1tzLUMVIctskqMC1dJPEeKn1A1LOH3tkCJCe0Xs6bLF/XtJ0Sd/kVJjkGAAPS/erjYHZNNXv+ksQT1Y=
     on:
       tags: true
-      node: '6.0'
+      node: '4.0'
   - provider: releases
     api_key:
       secure: wwCPWGftSTLvwgxgGZCg39K9otbNDHj8slxffh/MTJT/pWYKnBqufQfe6WcCs06c5z6kTddKS7E/ao7jwVlB5/8pIlMzR9cSnCMpJtmh8mFJPSMEMuM4dOVuntNCS58iei7O3PZHuJmQxZY5r6Zrk2egAcsgsDzV6959rxrS3WI=
@@ -24,4 +19,4 @@ deploy:
       - "mdast-util-heading-range.min.js"
     on:
       tags: true
-      node: '6.0'
+      node: '7.0'
