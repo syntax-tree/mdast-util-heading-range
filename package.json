@@ -9,13 +9,7 @@
     "range",
     "mdast"
   ],
-  "dependencies": {
-    "mdast-util-to-string": "^1.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wooorm/mdast-util-heading-range.git"
-  },
+  "repository": "https://github.com/wooorm/mdast-util-heading-range",
   "bugs": "https://github.com/wooorm/mdast-util-heading-range/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
@@ -24,6 +18,9 @@
   "files": [
     "index.js"
   ],
+  "dependencies": {
+    "mdast-util-to-string": "^1.0.0"
+  },
   "devDependencies": {
     "browserify": "^13.0.0",
     "esmangle": "^1.0.0",
