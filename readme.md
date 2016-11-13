@@ -17,46 +17,35 @@ globals module, [uncompressed and compressed][releases].
 
 ## Usage
 
-Dependencies:
-
 ```javascript
 var heading = require('mdast-util-heading-range');
 var remark = require('remark');
-```
 
-Plug-in:
-
-```javascript
 function plugin() {
-    return function (node) {
-        heading(node, 'foo', function (start, nodes, end) {
-            return [
-                start,
-                {
-                    'type': 'paragraph',
-                    'children': [{
-                        'type': 'text',
-                        'value': 'Qux.'
-                    }]
-                },
-                end
-            ];
-        });
-    }
+  return function (node) {
+    heading(node, 'foo', function (start, nodes, end) {
+      return [
+        start,
+        {
+          type: 'paragraph',
+          children: [{type: 'text', value: 'Qux.'}]
+        },
+        end
+      ];
+    });
+  }
 }
-```
 
-Process a document.
-
-```javascript
 var file = remark().use(plugin).process([
-    '# Foo',
-    '',
-    'Bar.',
-    '',
-    '# Baz',
-    ''
+  '# Foo',
+  '',
+  'Bar.',
+  '',
+  '# Baz',
+  ''
 ].join('\n'));
+
+console.log(String(file));
 ```
 
 Yields:
