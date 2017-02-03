@@ -9,8 +9,8 @@
     "range",
     "mdast"
   ],
-  "repository": "https://github.com/wooorm/mdast-util-heading-range",
-  "bugs": "https://github.com/wooorm/mdast-util-heading-range/issues",
+  "repository": "https://github.com/syntax-tree/mdast-util-heading-range",
+  "bugs": "https://github.com/syntax-tree/mdast-util-heading-range/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
