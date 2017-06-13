@@ -71,12 +71,12 @@ same or lower depth, or the end of the document.
 
 ###### Parameters
 
-*   `node` ([`Node`][node]) — Node to search;
+*   `node` ([`Node`][node]) — Node to search
 *   `test` (`string`, `RegExp`, `function(string, Node): boolean`)
     — Heading to look for.  When `string`, wrapped in
     `new RegExp('^(' + value + ')$', 'i')`;  when `RegExp`, wrapped
-    in `function (value) {expression.test(value)}`.
-*   `onrun` ([`Function`][onrun]).
+    in `function (value) {expression.test(value)}`
+*   `onrun` ([`Function`][onrun])
 
 #### `function onrun(start, nodes, end?, scope)`
 
@@ -84,14 +84,14 @@ Callback invoked when a range is found.
 
 ###### Parameters
 
-*   `start` (`Heading`) — Start of range;
-*   `nodes` (`Array.<Node>`) — Nodes between `start` and `end`;
-*   `end` (`Heading?`) — End of range, if any.
+*   `start` (`Heading`) — Start of range
+*   `nodes` (`Array.<Node>`) — Nodes between `start` and `end`
+*   `end` (`Heading?`) — End of range, if any
 *   `scope` (`Object`):
 
-    *   `parent` (`Node`) — Parent of the range;
-    *   `start` (`number`) — Index of `start` in `parent`;
-    *   `end` (`number?`) — Index of `end` in `parent`.
+    *   `parent` (`Node`) — Parent of the range
+    *   `start` (`number`) — Index of `start` in `parent`
+    *   `end` (`number?`) — Index of `end` in `parent`
 
 ## License
 
