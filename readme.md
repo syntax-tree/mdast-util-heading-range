@@ -31,7 +31,7 @@ function plugin() {
   }
 }
 
-var file = remark().use(plugin).process([
+var file = remark().use(plugin).processSync([
   '# Foo',
   '',
   'Bar.',

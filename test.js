@@ -336,5 +336,6 @@ function process(t, value, name) {
         });
       };
     })
-    .process(value).toString();
+    .processSync(value)
+    .toString();
 }
