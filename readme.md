@@ -12,38 +12,46 @@ npm install mdast-util-heading-range
 
 ## Usage
 
-```javascript
-var heading = require('mdast-util-heading-range');
-var remark = require('remark');
+Say we have the following file, `example.md`:
 
-function plugin() {
-  return function (node) {
-    heading(node, 'foo', function (start, nodes, end) {
-      return [
-        start,
-        {
-          type: 'paragraph',
-          children: [{type: 'text', value: 'Qux.'}]
-        },
-        end
-      ];
-    });
-  }
-}
+```markdown
+# Foo
 
-var file = remark().use(plugin).processSync([
-  '# Foo',
-  '',
-  'Bar.',
-  '',
-  '# Baz',
-  ''
-].join('\n'));
+Bar.
 
-console.log(String(file));
+# Baz
 ```
 
-Yields:
+And our script, `example.js`, looks as follows:
+
+```javascript
+var vfile = require('to-vfile');
+var remark = require('remark');
+var heading = require('mdast-util-heading-range');
+
+remark()
+  .use(plugin)
+  .process(vfile.readSync('example.md'), function (err, file) {
+    if (err) throw err;
+    console.log(String(file));
+  });
+
+function plugin() {
+  return transformer;
+  function transformer(tree) {
+    heading(tree, 'foo', mutate);
+  }
+  function mutate(start, nodes, end) {
+    return [
+      start,
+      {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
+      end
+    ];
+  }
+}
+```
+
+Now, running `node example` yields:
 
 ```markdown
 # Foo
