@@ -1,31 +1,36 @@
 'use strict';
 
-/* Dependencies. */
 var toString = require('mdast-util-to-string');
 
-/* Expose. */
 module.exports = headingRange;
 
-/* Methods. */
 var splice = [].splice;
 
-/* Search `node` for `heading` and invoke `callback`. */
-function headingRange(node, heading, callback) {
-  var test = heading;
+/* Search `node` with `options` and invoke `callback`. */
+function headingRange(node, options, callback) {
+  var test = options;
+  var ignoreFinalDefinitions = false;
+
+  /* Object, not regex. */
+  if (test && typeof test === 'object' && !('exec' in test)) {
+    ignoreFinalDefinitions = test.ignoreFinalDefinitions === true;
+    test = test.test;
+  }
 
   if (typeof test === 'string') {
     test = toExpression(test);
   }
 
-  if ('test' in test) {
+  /* Regex */
+  if ('exec' in test) {
     test = wrapExpression(test);
   }
 
-  search(node, test, callback);
+  search(node, test, ignoreFinalDefinitions, callback);
 }
 
 /* Search a node for heading range. */
-function search(root, test, callback) {
+function search(root, test, skip, callback) {
   var index = -1;
   var children = root.children;
   var length = children.length;
@@ -39,12 +44,12 @@ function search(root, test, callback) {
   while (++index < length) {
     child = children[index];
 
-    if (isClosingHeading(child, depth)) {
+    if (closing(child, depth)) {
       end = index;
       break;
     }
 
-    if (isOpeningHeading(child, depth, test)) {
+    if (opening(child, depth, test)) {
       start = index;
       depth = child.depth;
     }
@@ -52,7 +57,19 @@ function search(root, test, callback) {
 
   if (start !== null) {
     if (end === null) {
-      end = length + 1;
+      end = length;
+    }
+
+    if (skip) {
+      while (end > start) {
+        child = children[end - 1];
+
+        if (!definition(child)) {
+          break;
+        }
+
+        end--;
+      }
     }
 
     nodes = callback(
@@ -62,7 +79,7 @@ function search(root, test, callback) {
       {
         parent: root,
         start: start,
-        end: end in children ? end : null
+        end: children[end] ? end : null
       }
     );
 
@@ -101,16 +118,20 @@ function wrapExpression(expression) {
 }
 
 /* Check if `node` is a heading. */
-function isHeading(node) {
+function heading(node) {
   return node && node.type === 'heading';
 }
 
 /* Check if `node` is the main heading. */
-function isOpeningHeading(node, depth, test) {
-  return depth === null && isHeading(node) && test(toString(node), node);
+function opening(node, depth, test) {
+  return depth === null && heading(node) && test(toString(node), node);
 }
 
 /* Check if `node` is the next heading. */
-function isClosingHeading(node, depth) {
-  return depth && isHeading(node) && node.depth <= depth;
+function closing(node, depth) {
+  return depth && heading(node) && node.depth <= depth;
+}
+
+function definition(node) {
+  return node.type === 'definition' || node.type === 'footnoteDefinition';
 }

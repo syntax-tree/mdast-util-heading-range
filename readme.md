@@ -63,20 +63,31 @@ Qux.
 
 ## API
 
-### `heading(node, test, onrun)`
+### `heading(tree, test|options, onrun)`
 
-Transform part of a document without affecting other parts, by changing
-a section: a heading which passes `test`, until the next heading of the
-same or lower depth, or the end of the document.
+Search `tree` ([`Node`][node]) and transform a section without affecting other
+parts with `onrun` ([`Function`][onrun]).
+A Section is a heading that passes `test`, until the next heading of the same
+or lower depth, or the end of the document.  If `ignoreFinalDefinitions: true`,
+final definitions “in” the section are excluded.
 
-###### Parameters
+###### `options`
 
-*   `node` ([`Node`][node]) — Node to search
-*   `test` (`string`, `RegExp`, `function(string, Node): boolean`)
-    — Heading to look for.  When `string`, wrapped in
-    `new RegExp('^(' + value + ')$', 'i')`;  when `RegExp`, wrapped
-    in `function (value) {expression.test(value)}`
-*   `onrun` ([`Function`][onrun])
+*   `test` (`string`, `RegExp`, [`Function`][test])
+    — Heading to look for.
+    When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
+    when `RegExp`, wrapped in `function (value) {expression.test(value)}`
+*   `ignoreFinalDefinitions` (`boolean`, default: `false`)
+    — Ignore final definitions otherwise in the section
+
+#### `function test(value, node)`
+
+Function invoked for each heading with its content (`string`) and `node`
+itself ([`Heading`][heading]) to check if it’s the one to look for.
+
+###### Returns
+
+`Boolean?`, `true` if this is the heading to use.
 
 #### `function onrun(start, nodes, end?, scope)`
 
@@ -84,12 +95,12 @@ Callback invoked when a range is found.
 
 ###### Parameters
 
-*   `start` (`Heading`) — Start of range
-*   `nodes` (`Array.<Node>`) — Nodes between `start` and `end`
-*   `end` (`Heading?`) — End of range, if any
+*   `start` ([`Heading`][heading]) — Start of range
+*   `nodes` ([`Array.<Node>`][node]) — Nodes between `start` and `end`
+*   `end` ([`Node?`][node]) — End of range, if any
 *   `scope` (`Object`):
 
-    *   `parent` (`Node`) — Parent of the range
+    *   `parent` ([`Node`][node]) — Parent of the range
     *   `start` (`number`) — Index of `start` in `parent`
     *   `end` (`number?`) — Index of `end` in `parent`
 
@@ -122,3 +133,7 @@ Callback invoked when a range is found.
 [node]: https://github.com/syntax-tree/unist#node
 
 [onrun]: #function-onrunstart-nodes-end-scope
+
+[heading]: https://github.com/syntax-tree/mdast#heading
+
+[test]: #function-testvalue-node

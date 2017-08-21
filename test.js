@@ -5,7 +5,7 @@ var remark = require('remark');
 var heading = require('./');
 
 test('mdast-util-heading-range()', function (t) {
-  t.plan(43);
+  t.plan(55);
 
   t.equal(typeof heading, 'function', 'should be a function');
 
@@ -320,19 +320,102 @@ test('mdast-util-heading-range()', function (t) {
       ''
     ].join('\n'), 'should not insert an empty `end`');
   });
+
+  t.equal(
+    process(t, [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      'Bar',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      '',
+      '# Fo',
+      ''
+    ].join('\n'), {test: 'foo', ignoreFinalDefinitions: true}),
+    [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      '',
+      '# Fo',
+      ''
+    ].join('\n'),
+    'ignoreFinalDefinitions: should exclude definitions with an end heading'
+  );
+
+  t.equal(
+    process(t, [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      '',
+      '# Fo',
+      ''
+    ].join('\n'), {test: 'foo', ignoreFinalDefinitions: true}),
+    [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      '',
+      '# Fo',
+      ''
+    ].join('\n'),
+    'ignoreFinalDefinitions: should exclude only definitions'
+  );
+
+  t.equal(
+    process(t, [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      'Bar',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      ''
+    ].join('\n'), {test: 'foo', ignoreFinalDefinitions: true}),
+    [
+      '# Fo',
+      '',
+      '## Foo',
+      '',
+      '[one]: example.com',
+      '',
+      '[two]: example.com',
+      ''
+    ].join('\n'),
+    'ignoreFinalDefinitions: should exclude definitions in the final section'
+  );
 });
 
 /* Shortcut to process. */
-function process(t, value, name) {
+function process(t, value, options) {
   return remark()
     .use(function () {
       return function (node) {
-        heading(node, name, function (start, nodes, end, scope) {
+        heading(node, options, function (start, nodes, end, scope) {
           t.equal(typeof scope.start, 'number');
           t.assert(typeof scope.end === 'number' || scope.end === null);
           t.equal(scope.parent.type, 'root');
-
-          return [start].concat(end ? [end] : []);
+          return [start].concat([end]);
         });
       };
     })
