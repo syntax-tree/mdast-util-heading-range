@@ -13,7 +13,8 @@
   "bugs": "https://github.com/syntax-tree/mdast-util-heading-range/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+    "Jake Teton-Landis <just.1.jake@gmail.com>"
   ],
   "files": [
     "index.js"
