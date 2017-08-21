@@ -5,9 +5,25 @@ var remark = require('remark');
 var heading = require('./');
 
 test('mdast-util-heading-range()', function (t) {
-  t.plan(55);
+  t.plan(57);
 
   t.equal(typeof heading, 'function', 'should be a function');
+
+  t.throws(
+    function () {
+      heading({type: 'root', chilren: []}, null, function () {});
+    },
+    /^Error: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
+    'should throw when `null` is passed in'
+  );
+
+  t.throws(
+    function () {
+      heading({type: 'root', chilren: []}, undefined, function () {});
+    },
+    /^Error: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
+    'should throw when `undefined` is passed in'
+  );
 
   t.equal(
     process(t, [

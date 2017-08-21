@@ -44,6 +44,9 @@
   "xo": {
     "space": true,
     "esnext": false,
+    "rules": {
+      "unicorn/prefer-type-error": "off"
+    },
     "ignore": [
       "mdast-util-heading-range.js"
     ]

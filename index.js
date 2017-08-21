@@ -22,8 +22,15 @@ function headingRange(node, options, callback) {
   }
 
   /* Regex */
-  if ('exec' in test) {
+  if (test && 'exec' in test) {
     test = wrapExpression(test);
+  }
+
+  if (typeof test !== 'function') {
+    throw new Error(
+      'Expected `string`, `regexp`, or `function` for `test`, ' +
+      'not `' + test + '`'
+    );
   }
 
   search(node, test, ignoreFinalDefinitions, callback);
