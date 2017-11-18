@@ -104,6 +104,14 @@ Callback invoked when a range is found.
     *   `start` (`number`) — Index of `start` in `parent`
     *   `end` (`number?`) — Index of `end` in `parent`
 
+## Contribute
+
+See [`contribute.md` in `syntax-tree/mdast`][contribute] for ways to get
+started.
+
+This organisation has a [Code of Conduct][coc].  By interacting with this
+repository, organisation, or community you agree to abide by its terms.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -137,3 +145,7 @@ Callback invoked when a range is found.
 [heading]: https://github.com/syntax-tree/mdast#heading
 
 [test]: #function-testvalue-node
+
+[contribute]: https://github.com/syntax-tree/mdast/blob/master/contributing.md
+
+[coc]: https://github.com/syntax-tree/mdast/blob/master/code-of-conduct.md
