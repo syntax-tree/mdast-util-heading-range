@@ -24,39 +24,47 @@
   },
   "devDependencies": {
     "browserify": "^16.0.0",
-    "esmangle": "^1.0.0",
     "nyc": "^13.0.0",
+    "prettier": "^1.14.3",
     "remark": "^10.0.0",
     "remark-cli": "^6.0.0",
     "remark-preset-wooorm": "^4.0.0",
     "tape": "^4.4.0",
+    "tinyify": "^2.4.3",
     "xo": "^0.23.0"
   },
   "scripts": {
-    "build-md": "remark . --quiet --frail --output",
-    "build-bundle": "browserify index.js --no-builtins -s mdastUtilHeadingRange > mdast-util-heading-range.js",
-    "build-mangle": "esmangle mdast-util-heading-range.js > mdast-util-heading-range.min.js",
-    "build": "npm run build-md && npm run build-bundle && npm run build-mangle",
-    "lint": "xo",
-    "test-api": "node test.js",
+    "format": "remark . -qfo && prettier --write '**/*.js' && xo --fix",
+    "build-bundle": "browserify . -s mdastUtilHeadingRange > mdast-util-heading-range.js",
+    "build-mangle": "browserify . -s mdastUtilHeadingRange -p tinyify > mdast-util-heading-range.min.js",
+    "build": "npm run build-bundle && npm run build-mangle",
+    "test-api": "node test",
     "test-coverage": "nyc --reporter lcov tape test.js",
-    "test": "npm run build && npm run lint && npm run test-coverage"
-  },
-  "xo": {
-    "space": true,
-    "esnext": false,
-    "rules": {
-      "unicorn/prefer-type-error": "off"
-    },
-    "ignore": [
-      "mdast-util-heading-range.js"
-    ]
+    "test": "npm run format && npm run build && npm run test-coverage"
   },
   "nyc": {
     "check-coverage": true,
     "lines": 100,
     "functions": 100,
     "branches": 100
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "semi": false,
+    "trailingComma": "none"
+  },
+  "xo": {
+    "prettier": true,
+    "esnext": false,
+    "rules": {
+      "unicorn/prefer-type-error": "off"
+    },
+    "ignores": [
+      "mdast-util-heading-range.js"
+    ]
   },
   "remarkConfig": {
     "plugins": [

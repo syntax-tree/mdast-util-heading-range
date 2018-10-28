@@ -25,28 +25,30 @@ Bar.
 And our script, `example.js`, looks as follows:
 
 ```javascript
-var vfile = require('to-vfile');
-var remark = require('remark');
-var heading = require('mdast-util-heading-range');
+var vfile = require('to-vfile')
+var remark = require('remark')
+var heading = require('mdast-util-heading-range')
 
 remark()
   .use(plugin)
-  .process(vfile.readSync('example.md'), function (err, file) {
-    if (err) throw err;
-    console.log(String(file));
-  });
+  .process(vfile.readSync('example.md'), function(err, file) {
+    if (err) throw err
+    console.log(String(file))
+  })
 
 function plugin() {
-  return transformer;
-  function transformer(tree) {
-    heading(tree, 'foo', mutate);
+  return transform
+
+  function transform(tree) {
+    heading(tree, 'foo', mutate)
   }
+
   function mutate(start, nodes, end) {
     return [
       start,
       {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
       end
-    ];
+    ]
   }
 }
 ```
@@ -71,14 +73,17 @@ A Section is a heading that passes `test`, until the next heading of the same
 or lower depth, or the end of the document.  If `ignoreFinalDefinitions: true`,
 final definitions “in” the section are excluded.
 
-###### `options`
+##### `options`
 
-*   `test` (`string`, `RegExp`, [`Function`][test])
-    — Heading to look for.
-    When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
-    when `RegExp`, wrapped in `function (value) {expression.test(value)}`
-*   `ignoreFinalDefinitions` (`boolean`, default: `false`)
-    — Ignore final definitions otherwise in the section
+###### `options.test`
+
+Heading to look for (`string`, `RegExp`, [`Function`][test]).
+When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
+when `RegExp`, wrapped in `function (value) {expression.test(value)}`
+
+###### `options.ignoreFinalDefinitions`
+
+Ignore final definitions otherwise in the section (`boolean`, default: `false`).
 
 #### `function test(value, node)`
 
@@ -93,16 +98,27 @@ itself ([`Heading`][heading]) to check if it’s the one to look for.
 
 Callback invoked when a range is found.
 
-###### Parameters
+##### Parameters
 
-*   `start` ([`Heading`][heading]) — Start of range
-*   `nodes` ([`Array.<Node>`][node]) — Nodes between `start` and `end`
-*   `end` ([`Node?`][node]) — End of range, if any
-*   `scope` (`Object`):
+###### `start`
 
-    *   `parent` ([`Node`][node]) — Parent of the range
-    *   `start` (`number`) — Index of `start` in `parent`
-    *   `end` (`number?`) — Index of `end` in `parent`
+Start of range ([`Heading`][heading]).
+
+###### `nodes`
+
+Nodes between `start` and `end` ([`Array.<Node>`][node]).
+
+###### `end`
+
+End of range, if any ([`Node?`][node]).
+
+###### `scope`
+
+Extra info (`Object`):
+
+*   `parent` ([`Node`][node]) — Parent of the range
+*   `start` (`number`) — Index of `start` in `parent`
+*   `end` (`number?`) — Index of `end` in `parent`
 
 ## Contribute
 
