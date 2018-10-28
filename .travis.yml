@@ -7,7 +7,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: wwCPWGftSTLvwgxgGZCg39K9otbNDHj8slxffh/MTJT/pWYKnBqufQfe6WcCs06c5z6kTddKS7E/ao7jwVlB5/8pIlMzR9cSnCMpJtmh8mFJPSMEMuM4dOVuntNCS58iei7O3PZHuJmQxZY5r6Zrk2egAcsgsDzV6959rxrS3WI=
+    secure: h+9faOh8EVey1gABDovw5kL9qGqK8Po0INTYEr/RlTWBi1X4wTSO90eMHGdsTFY5x5hn3vN2KwTsCql6xCEV+tgS0O0Mwf7XAxC7xNTaUIpxiN3nYsuKU7Idblf1slLiZ3IE1zneXlI9Jec1TNLeAxqvMbnvIV8UmN2UWPgp0FY=
   file:
     - "mdast-util-heading-range.js"
     - "mdast-util-heading-range.min.js"
