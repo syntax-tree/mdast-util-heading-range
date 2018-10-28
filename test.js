@@ -2,7 +2,7 @@
 
 var test = require('tape');
 var remark = require('remark');
-var heading = require('./');
+var heading = require('.');
 
 test('mdast-util-heading-range()', function (t) {
   t.plan(57);
