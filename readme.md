@@ -1,6 +1,6 @@
 # mdast-util-heading-range [![Build Status][build-badge]][build-status] [![Coverage Status][coverage-badge]][coverage-status] [![Chat][chat-badge]][chat]
 
-Markdown heading as ranges in [**MDAST**][mdast].
+Markdown heading as ranges in [**mdast**][mdast].
 
 ## Installation
 
