@@ -305,7 +305,6 @@ test('mdast-util-heading-range()', function(t) {
   )
 })
 
-/* Shortcut to process. */
 function process(t, value, options) {
   return remark()
     .use(function() {
