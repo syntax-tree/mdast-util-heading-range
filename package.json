@@ -4,6 +4,9 @@
   "description": "Markdown heading as ranges in mdast",
   "license": "MIT",
   "keywords": [
+    "unist",
+    "util",
+    "utility",
     "markdown",
     "heading",
     "range",
