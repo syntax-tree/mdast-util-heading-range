@@ -1,8 +1,16 @@
-# mdast-util-heading-range [![Build Status][build-badge]][build-status] [![Coverage Status][coverage-badge]][coverage-status] [![Chat][chat-badge]][chat]
+# mdast-util-heading-range
 
-Markdown heading as ranges in [**mdast**][mdast].
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-## Installation
+[**mdast**][mdast] utility to use headings as ranges.
+
+## Install
 
 [npm][]:
 
@@ -14,7 +22,7 @@ npm install mdast-util-heading-range
 
 Say we have the following file, `example.md`:
 
-```markdown
+```md
 # Foo
 
 Bar.
@@ -24,7 +32,7 @@ Bar.
 
 And our script, `example.js`, looks as follows:
 
-```javascript
+```js
 var vfile = require('to-vfile')
 var remark = require('remark')
 var heading = require('mdast-util-heading-range')
@@ -55,7 +63,7 @@ function plugin() {
 
 Now, running `node example` yields:
 
-```markdown
+```md
 # Foo
 
 Qux.
@@ -69,9 +77,10 @@ Qux.
 
 Search `tree` ([`Node`][node]) and transform a section without affecting other
 parts with `onrun` ([`Function`][onrun]).
-A Section is a heading that passes `test`, until the next heading of the same
-or lower depth, or the end of the document.  If `ignoreFinalDefinitions: true`,
-final definitions “in” the section are excluded.
+A “section” is a heading that passes `test`, until the next heading of the same
+or lower depth, or the end of the document.
+If `ignoreFinalDefinitions: true`, final definitions “in” the section are
+excluded.
 
 ##### `options`
 
@@ -122,11 +131,13 @@ Extra info (`Object`):
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/mdast`][contributing] for ways to get
+See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
 started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -136,21 +147,41 @@ repository, organisation, or community you agree to abide by its terms.
 
 [build-badge]: https://img.shields.io/travis/syntax-tree/mdast-util-heading-range.svg
 
-[build-status]: https://travis-ci.org/syntax-tree/mdast-util-heading-range
+[build]: https://travis-ci.org/syntax-tree/mdast-util-heading-range
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-heading-range.svg
 
-[coverage-status]: https://codecov.io/github/syntax-tree/mdast-util-heading-range
+[coverage]: https://codecov.io/github/syntax-tree/mdast-util-heading-range
 
-[chat-badge]: https://img.shields.io/gitter/room/wooorm/remark.svg
+[downloads-badge]: https://img.shields.io/npm/dm/mdast-util-heading-range.svg
 
-[chat]: https://gitter.im/wooorm/remark
+[downloads]: https://www.npmjs.com/package/mdast-util-heading-range
+
+[size-badge]: https://img.shields.io/bundlephobia/minzip/mdast-util-heading-range.svg
+
+[size]: https://bundlephobia.com/result?p=mdast-util-heading-range
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/syntax-tree
+
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: license
 
 [author]: https://wooorm.com
 
-[npm]: https://docs.npmjs.com/cli/install
+[contributing]: https://github.com/syntax-tree/.github/blob/master/contributing.md
+
+[support]: https://github.com/syntax-tree/.github/blob/master/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/master/code-of-conduct.md
 
 [mdast]: https://github.com/syntax-tree/mdast
 
@@ -161,7 +192,3 @@ repository, organisation, or community you agree to abide by its terms.
 [heading]: https://github.com/syntax-tree/mdast#heading
 
 [test]: #function-testvalue-node
-
-[contributing]: https://github.com/syntax-tree/mdast/blob/master/contributing.md
-
-[coc]: https://github.com/syntax-tree/mdast/blob/master/code-of-conduct.md
