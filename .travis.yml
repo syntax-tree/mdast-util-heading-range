@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- lts/boron
-- node
+  - lts/dubnium
+  - node
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: releases
@@ -9,7 +9,7 @@ deploy:
   api_key:
     secure: h+9faOh8EVey1gABDovw5kL9qGqK8Po0INTYEr/RlTWBi1X4wTSO90eMHGdsTFY5x5hn3vN2KwTsCql6xCEV+tgS0O0Mwf7XAxC7xNTaUIpxiN3nYsuKU7Idblf1slLiZ3IE1zneXlI9Jec1TNLeAxqvMbnvIV8UmN2UWPgp0FY=
   file:
-    - "mdast-util-heading-range.js"
-    - "mdast-util-heading-range.min.js"
+    - 'mdast-util-heading-range.js'
+    - 'mdast-util-heading-range.min.js'
   on:
     tags: true
