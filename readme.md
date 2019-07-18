@@ -131,9 +131,8 @@ Extra info (`Object`):
 
 ## Security
 
-Improper use of the `onrun` can open you up to a
-[cross-site scripting (XSS)][xss] attack as the value returned from it is
-injected into the syntax tree.
+Improper use of `onrun` can open you up to a [cross-site scripting (XSS)][xss]
+attack as the value it returns is injected into the syntax tree.
 This can become a problem if the tree is later transformed to [**hast**][hast].
 The following example shows how a script is injected that could run when loaded
 in a browser.
