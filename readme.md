@@ -22,7 +22,7 @@ npm install mdast-util-heading-range
 
 Say we have the following file, `example.md`:
 
-```md
+```markdown
 # Foo
 
 Bar.
@@ -63,7 +63,7 @@ function plugin() {
 
 Now, running `node example` yields:
 
-```md
+```markdown
 # Foo
 
 Qux.
@@ -129,6 +129,33 @@ Extra info (`Object`):
 *   `start` (`number`) — Index of `start` in `parent`
 *   `end` (`number?`) — Index of `end` in `parent`
 
+## Security
+
+Improper use of the `onrun` can open you up to a
+[cross-site scripting (XSS)][xss] attack as the value returned from it is
+injected into the syntax tree.
+This can become a problem if the tree is later transformed to [**hast**][hast].
+The following example shows how a script is injected that could run when loaded
+in a browser.
+
+```js
+function onrun(start, nodes, end) {
+  return [start, {type: 'html', value: 'alert(1)'}, end]
+}
+```
+
+Yields:
+
+```markdown
+# Foo
+
+<script>alert(1)</script>
+
+# Baz
+```
+
+Either do not use user input in `onrun` or use [`hast-util-santize`][sanitize].
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
@@ -192,3 +219,9 @@ abide by its terms.
 [heading]: https://github.com/syntax-tree/mdast#heading
 
 [test]: #function-testvalue-node
+
+[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+
+[hast]: https://github.com/syntax-tree/hast
+
+[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
