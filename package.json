@@ -1,6 +1,6 @@
 {
   "name": "mdast-util-heading-range",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "mdast utility to use headings as ranges in mdast",
   "license": "MIT",
   "keywords": [
