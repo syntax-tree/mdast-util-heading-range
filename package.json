@@ -1,16 +1,17 @@
 {
   "name": "mdast-util-heading-range",
   "version": "2.1.3",
-  "description": "Markdown heading as ranges in mdast",
+  "description": "mdast utility to use headings as ranges in mdast",
   "license": "MIT",
   "keywords": [
     "unist",
+    "mdast",
+    "mdast-util",
     "util",
     "utility",
     "markdown",
     "heading",
-    "range",
-    "mdast"
+    "range"
   ],
   "repository": "syntax-tree/mdast-util-heading-range",
   "bugs": "https://github.com/syntax-tree/mdast-util-heading-range/issues",
