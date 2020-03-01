@@ -155,6 +155,11 @@ Yields:
 
 Either do not use user input in `onrun` or use [`hast-util-santize`][sanitize].
 
+## Related
+
+*   [`mdast-zone`](https://github.com/syntax-tree/mdast-zone)
+    — comments as ranges or markers instead of headings
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
