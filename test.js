@@ -4,22 +4,22 @@ var test = require('tape')
 var remark = require('remark')
 var heading = require('.')
 
-test('mdast-util-heading-range()', function(t) {
+test('mdast-util-heading-range()', function (t) {
   t.plan(57)
 
   t.equal(typeof heading, 'function', 'should be a function')
 
   t.throws(
-    function() {
-      heading({type: 'root', chilren: []}, null, function() {})
+    function () {
+      heading({type: 'root', chilren: []}, null, function () {})
     },
     /^Error: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
     'should throw when `null` is passed in'
   )
 
   t.throws(
-    function() {
-      heading({type: 'root', chilren: []}, undefined, function() {})
+    function () {
+      heading({type: 'root', chilren: []}, undefined, function () {})
     },
     /^Error: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
     'should throw when `undefined` is passed in'
@@ -49,7 +49,7 @@ test('mdast-util-heading-range()', function(t) {
     process(
       t,
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
-      function(value) {
+      function (value) {
         return value.toLowerCase().indexOf('foo') === 0
       }
     ),
@@ -119,14 +119,14 @@ test('mdast-util-heading-range()', function(t) {
   )
 
   remark()
-    .use(function() {
-      return function(node) {
-        heading(node, 'foo', function() {
+    .use(function () {
+      return function (node) {
+        heading(node, 'foo', function () {
           return null
         })
       }
     })
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function(
+    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function (
       err,
       file
     ) {
@@ -140,14 +140,14 @@ test('mdast-util-heading-range()', function(t) {
     })
 
   remark()
-    .use(function() {
-      return function(node) {
-        heading(node, 'foo', function() {
+    .use(function () {
+      return function (node) {
+        heading(node, 'foo', function () {
           return []
         })
       }
     })
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function(
+    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function (
       err,
       file
     ) {
@@ -161,16 +161,16 @@ test('mdast-util-heading-range()', function(t) {
     })
 
   remark()
-    .use(function() {
-      return function(node) {
-        heading(node, 'foo', function(start, nodes, end) {
+    .use(function () {
+      return function (node) {
+        heading(node, 'foo', function (start, nodes, end) {
           return [start, {type: 'thematicBreak'}, end]
         })
       }
     })
     .process(
       ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
-      function(err, file) {
+      function (err, file) {
         t.ifError(err, 'should not fail (#3)')
 
         t.equal(
@@ -182,9 +182,9 @@ test('mdast-util-heading-range()', function(t) {
     )
 
   remark()
-    .use(function() {
-      return function(node) {
-        heading(node, 'foo', function(start, nodes, end) {
+    .use(function () {
+      return function (node) {
+        heading(node, 'foo', function (start, nodes, end) {
           t.equal(nodes.length, 3)
 
           return [start].concat(nodes, end)
@@ -195,7 +195,7 @@ test('mdast-util-heading-range()', function(t) {
       ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
         '\n'
       ),
-      function(err, file) {
+      function (err, file) {
         t.ifError(err, 'should not fail (#4)')
 
         t.equal(
@@ -307,9 +307,9 @@ test('mdast-util-heading-range()', function(t) {
 
 function process(t, value, options) {
   return remark()
-    .use(function() {
-      return function(node) {
-        heading(node, options, function(start, nodes, end, scope) {
+    .use(function () {
+      return function (node) {
+        heading(node, options, function (start, nodes, end, scope) {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
           t.equal(scope.parent.type, 'root')
