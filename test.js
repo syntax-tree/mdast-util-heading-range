@@ -114,7 +114,7 @@ test('mdast-util-heading-range()', function (t) {
       ['# ', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
       'fo+'
     ),
-    ['# ', '', '## Foo', '', '## Baz', ''].join('\n'),
+    ['#', '', '## Foo', '', '## Baz', ''].join('\n'),
     'should not fail with empty headings'
   )
 
@@ -175,7 +175,7 @@ test('mdast-util-heading-range()', function (t) {
 
         t.equal(
           String(file),
-          ['Foo', '', '## Foo', '', '* * *', '', '## Baz', ''].join('\n'),
+          ['Foo', '', '## Foo', '', '***', '', '## Baz', ''].join('\n'),
           'should insert all returned nodes'
         )
       }

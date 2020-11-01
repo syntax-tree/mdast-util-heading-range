@@ -31,15 +31,15 @@
     "mdast-util-to-string": "^1.0.0"
   },
   "devDependencies": {
-    "browserify": "^16.0.0",
+    "browserify": "^17.0.0",
     "nyc": "^15.0.0",
     "prettier": "^2.0.0",
-    "remark": "^12.0.0",
-    "remark-cli": "^8.0.0",
-    "remark-preset-wooorm": "^7.0.0",
+    "remark": "^13.0.0",
+    "remark-cli": "^9.0.0",
+    "remark-preset-wooorm": "^8.0.0",
     "tape": "^5.0.0",
-    "tinyify": "^2.0.0",
-    "xo": "^0.32.0"
+    "tinyify": "^3.0.0",
+    "xo": "^0.34.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . --write && xo --fix",
