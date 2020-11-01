@@ -9,19 +9,28 @@ var splice = [].splice
 // Search `node` with `options` and invoke `callback`.
 function headingRange(node, options, callback) {
   var test = options
-  var ignoreFinalDefinitions = false
+  var children = node.children
+  var index = -1
+  var ignoreFinalDefinitions
+  var depth
+  var start
+  var end
+  var nodes
+  var result
+  var child
 
   // Object, not regex.
   if (test && typeof test === 'object' && !('exec' in test)) {
-    ignoreFinalDefinitions = test.ignoreFinalDefinitions === true
+    ignoreFinalDefinitions = test.ignoreFinalDefinitions
     test = test.test
   }
 
+  // Transform a string into an applicable expression.
   if (typeof test === 'string') {
-    test = toExpression(test)
+    test = new RegExp('^(' + test + ')$', 'i')
   }
 
-  // Regex
+  // Regex.
   if (test && 'exec' in test) {
     test = wrapExpression(test)
   }
@@ -34,48 +43,32 @@ function headingRange(node, options, callback) {
     )
   }
 
-  search(node, test, ignoreFinalDefinitions, callback)
-}
-
-// Search a node for heading range.
-function search(root, test, skip, callback) {
-  var index = -1
-  var children = root.children
-  var length = children.length
-  var depth = null
-  var start = null
-  var end = null
-  var nodes
-  var clean
-  var child
-
-  while (++index < length) {
+  // Find the range.
+  while (++index < children.length) {
     child = children[index]
 
-    if (closing(child, depth)) {
-      end = index
-      break
-    }
+    if (child.type === 'heading') {
+      if (depth && child.depth <= depth) {
+        end = index
+        break
+      }
 
-    if (opening(child, depth, test)) {
-      start = index
-      depth = child.depth
+      if (!depth && test(toString(child), child)) {
+        depth = child.depth
+        start = index
+        // Assume no end heading is found.
+        end = children.length
+      }
     }
   }
 
-  if (start !== null) {
-    if (end === null) {
-      end = length
-    }
-
-    if (skip) {
-      while (end > start) {
-        child = children[end - 1]
-
-        if (!definition(child)) {
-          break
-        }
-
+  // When we have a starting heading.
+  if (depth) {
+    if (ignoreFinalDefinitions) {
+      while (
+        children[end - 1].type === 'definition' ||
+        children[end - 1].type === 'footnoteDefinition'
+      ) {
         end--
       }
     }
@@ -85,33 +78,25 @@ function search(root, test, skip, callback) {
       children.slice(start + 1, end),
       children[end],
       {
-        parent: root,
+        parent: node,
         start: start,
         end: children[end] ? end : null
       }
     )
 
-    clean = []
-    index = -1
-    length = nodes && nodes.length
-
-    // Ensure no empty nodes are inserted.  This could be the case if `end` is
-    // in `nodes` but no `end` node exists.
-    while (++index < length) {
-      if (nodes[index]) {
-        clean.push(nodes[index])
-      }
-    }
-
     if (nodes) {
-      splice.apply(children, [start, end - start + 1].concat(clean))
+      // Ensure no empty nodes are inserted.
+      // This could be the case if `end` is in `nodes` but no `end` node exists.
+      result = []
+      index = -1
+
+      while (++index < nodes.length) {
+        if (nodes[index]) result.push(nodes[index])
+      }
+
+      splice.apply(children, [start, end - start + 1].concat(result))
     }
   }
-}
-
-// Transform a string into an applicable expression.
-function toExpression(value) {
-  return new RegExp('^(' + value + ')$', 'i')
 }
 
 // Wrap an expression into an assertion function.
@@ -122,23 +107,4 @@ function wrapExpression(expression) {
   function assertion(value) {
     return expression.test(value)
   }
-}
-
-// Check if `node` is a heading.
-function heading(node) {
-  return node && node.type === 'heading'
-}
-
-// Check if `node` is the main heading.
-function opening(node, depth, test) {
-  return depth === null && heading(node) && test(toString(node), node)
-}
-
-// Check if `node` is the next heading.
-function closing(node, depth) {
-  return depth && heading(node) && node.depth <= depth
-}
-
-function definition(node) {
-  return node.type === 'definition' || node.type === 'footnoteDefinition'
 }
