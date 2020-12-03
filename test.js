@@ -126,18 +126,18 @@ test('mdast-util-heading-range()', function (t) {
         })
       }
     })
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function (
-      err,
-      file
-    ) {
-      t.ifError(err, 'should not fail (#1)')
+    .process(
+      ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
+      function (err, file) {
+        t.ifError(err, 'should not fail (#1)')
 
-      t.equal(
-        String(file),
-        ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-        'should not remove anything when `null` is given'
-      )
-    })
+        t.equal(
+          String(file),
+          ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
+          'should not remove anything when `null` is given'
+        )
+      }
+    )
 
   remark()
     .use(function () {
@@ -147,18 +147,18 @@ test('mdast-util-heading-range()', function (t) {
         })
       }
     })
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), function (
-      err,
-      file
-    ) {
-      t.ifError(err, 'should not fail (#2)')
+    .process(
+      ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
+      function (err, file) {
+        t.ifError(err, 'should not fail (#2)')
 
-      t.equal(
-        String(file),
-        ['Foo', ''].join('\n'),
-        'should replace all previous nodes otherwise'
-      )
-    })
+        t.equal(
+          String(file),
+          ['Foo', ''].join('\n'),
+          'should replace all previous nodes otherwise'
+        )
+      }
+    )
 
   remark()
     .use(function () {
