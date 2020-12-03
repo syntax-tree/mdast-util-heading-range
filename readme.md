@@ -176,9 +176,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/syntax-tree/mdast-util-heading-range.svg
+[build-badge]: https://github.com/syntax-tree/mdast-util-heading-range/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/syntax-tree/mdast-util-heading-range
+[build]: https://github.com/syntax-tree/mdast-util-heading-range/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-heading-range.svg
 
