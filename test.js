@@ -1,3 +1,9 @@
+/**
+ * @typedef {import('tape').Test} Test
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('./index.js').Test | import('./index.js').Options} Options
+ */
+
 import test from 'tape'
 import remark from 'remark'
 import {headingRange} from './index.js'
@@ -47,6 +53,7 @@ test('mdast-util-heading-range()', function (t) {
     process(
       t,
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
+      /** @type {Options} */
       function (value) {
         return value.toLowerCase().indexOf('foo') === 0
       }
@@ -161,7 +168,7 @@ test('mdast-util-heading-range()', function (t) {
   remark()
     .use(function () {
       return function (node) {
-        headingRange(node, 'foo', function (start, nodes, end) {
+        headingRange(node, 'foo', function (start, _, end) {
           return [start, {type: 'thematicBreak'}, end]
         })
       }
@@ -184,8 +191,7 @@ test('mdast-util-heading-range()', function (t) {
       return function (node) {
         headingRange(node, 'foo', function (start, nodes, end) {
           t.equal(nodes.length, 3)
-
-          return [start].concat(nodes, end)
+          return [start, ...nodes, end]
         })
       }
     })
@@ -303,15 +309,20 @@ test('mdast-util-heading-range()', function (t) {
   )
 })
 
+/**
+ * @param {Test} t
+ * @param {string} value
+ * @param {Options} options
+ */
 function process(t, value, options) {
   return remark()
     .use(function () {
       return function (node) {
-        headingRange(node, options, function (start, nodes, end, scope) {
+        headingRange(node, options, function (start, _, end, scope) {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
           t.equal(scope.parent.type, 'root')
-          return [start].concat([end])
+          return [start, end]
         })
       }
     })

@@ -1,17 +1,56 @@
+/**
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('unist').Parent} Parent
+ * @typedef {import('mdast').Heading} Heading
+ *
+ * @typedef {(value: string, node: Heading) => boolean} TestFunction
+ * @typedef {string|RegExp|TestFunction} Test
+ *
+ * @typedef Options
+ * @property {Test} test
+ * @property {boolean} [ignoreFinalDefinitions=false]
+ *
+ * @typedef ZoneInfo
+ * @property {number} start
+ * @property {number} end
+ * @property {Parent|null} parent
+ *
+ * @callback Handler
+ * @param {Heading|undefined} start
+ * @param {Array.<Node>} between
+ * @param {Node|undefined} end
+ * @param {ZoneInfo} info
+ */
+
 import {toString} from 'mdast-util-to-string'
 
-// Search `node` with `options` and invoke `callback`.
+/**
+ * Search `node` with `options` and invoke `callback`.
+ *
+ * @param {Node} node
+ * @param {Test|Options} options
+ * @param {Handler} handler
+ */
 // eslint-disable-next-line complexity
-export function headingRange(node, options, callback) {
+export function headingRange(node, options, handler) {
   var test = options
-  var children = node.children
+  /** @type {Array.<Node>} */
+  // @ts-ignore looks like children.
+  var children = node.children || []
   var index = -1
+  /** @type {boolean} */
   var ignoreFinalDefinitions
+  /** @type {number} */
   var depth
+  /** @type {number} */
   var start
+  /** @type {number} */
   var end
+  /** @type {Array.<Node>} */
   var nodes
+  /** @type {Array.<Node>} */
   var result
+  /** @type {Node} */
   var child
 
   // Object, not regex.
@@ -48,7 +87,9 @@ export function headingRange(node, options, callback) {
         break
       }
 
+      // @ts-ignore looks like a heading.
       if (!depth && test(toString(child), child)) {
+        // @ts-ignore looks like a heading.
         depth = child.depth
         start = index
         // Assume no end heading is found.
@@ -68,7 +109,8 @@ export function headingRange(node, options, callback) {
       }
     }
 
-    nodes = callback(
+    nodes = handler(
+      // @ts-ignore `start` points to a heading.
       children[start],
       children.slice(start + 1, end),
       children[end],
@@ -94,11 +136,19 @@ export function headingRange(node, options, callback) {
   }
 }
 
-// Wrap an expression into an assertion function.
+/**
+ * Wrap an expression into an assertion function.
+ * @param {RegExp} expression
+ * @returns {(value: string) => boolean}
+ */
 function wrapExpression(expression) {
   return assertion
 
-  // Assert `value` matches the bound `expression`.
+  /**
+   * Assert `value` matches the bound `expression`.
+   * @param {string} value
+   * @returns {boolean}
+   */
   function assertion(value) {
     return expression.test(value)
   }
