@@ -1,27 +1,25 @@
-'use strict'
-
-var test = require('tape')
-var remark = require('remark')
-var heading = require('.')
+import test from 'tape'
+import remark from 'remark'
+import {headingRange} from './index.js'
 
 test('mdast-util-heading-range()', function (t) {
   t.plan(57)
 
-  t.equal(typeof heading, 'function', 'should be a function')
+  t.equal(typeof headingRange, 'function', 'should be a function')
 
   t.throws(
     function () {
-      heading({type: 'root', chilren: []}, null, function () {})
+      headingRange({type: 'root', chilren: []}, null, function () {})
     },
-    /^Error: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
+    /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
     'should throw when `null` is passed in'
   )
 
   t.throws(
     function () {
-      heading({type: 'root', chilren: []}, undefined, function () {})
+      headingRange({type: 'root', chilren: []}, undefined, function () {})
     },
-    /^Error: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
+    /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
     'should throw when `undefined` is passed in'
   )
 
@@ -121,7 +119,7 @@ test('mdast-util-heading-range()', function (t) {
   remark()
     .use(function () {
       return function (node) {
-        heading(node, 'foo', function () {
+        headingRange(node, 'foo', function () {
           return null
         })
       }
@@ -142,7 +140,7 @@ test('mdast-util-heading-range()', function (t) {
   remark()
     .use(function () {
       return function (node) {
-        heading(node, 'foo', function () {
+        headingRange(node, 'foo', function () {
           return []
         })
       }
@@ -163,7 +161,7 @@ test('mdast-util-heading-range()', function (t) {
   remark()
     .use(function () {
       return function (node) {
-        heading(node, 'foo', function (start, nodes, end) {
+        headingRange(node, 'foo', function (start, nodes, end) {
           return [start, {type: 'thematicBreak'}, end]
         })
       }
@@ -184,7 +182,7 @@ test('mdast-util-heading-range()', function (t) {
   remark()
     .use(function () {
       return function (node) {
-        heading(node, 'foo', function (start, nodes, end) {
+        headingRange(node, 'foo', function (start, nodes, end) {
           t.equal(nodes.length, 3)
 
           return [start].concat(nodes, end)
@@ -309,7 +307,7 @@ function process(t, value, options) {
   return remark()
     .use(function () {
       return function (node) {
-        heading(node, options, function (start, nodes, end, scope) {
+        headingRange(node, options, function (start, nodes, end, scope) {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
           t.equal(scope.parent.type, 'root')

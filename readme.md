@@ -12,6 +12,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -33,9 +36,9 @@ Bar.
 And our script, `example.js`, looks as follows:
 
 ```js
-var vfile = require('to-vfile')
-var remark = require('remark')
-var heading = require('mdast-util-heading-range')
+import toVFile from 'to-vfile'
+import remark from 'remark'
+import {headingRange} from 'mdast-util-heading-range'
 
 remark()
   .use(plugin)
@@ -48,10 +51,10 @@ function plugin() {
   return transform
 
   function transform(tree) {
-    heading(tree, 'foo', mutate)
+    headingRange(tree, 'foo', handler)
   }
 
-  function mutate(start, nodes, end) {
+  function handler(start, nodes, end) {
     return [
       start,
       {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
@@ -73,10 +76,13 @@ Qux.
 
 ## API
 
-### `heading(tree, test|options, onrun)`
+This package exports the following identifiers: `headingRange`.
+There is no default export.
+
+### `headingRange(tree, test|options, handler)`
 
 Search `tree` ([`Node`][node]) and transform a section without affecting other
-parts with `onrun` ([`Function`][onrun]).
+parts with `handler` ([`Function`][handler]).
 A “section” is a heading that passes `test`, until the next heading of the same
 or lower depth, or the end of the document.
 If `ignoreFinalDefinitions: true`, final definitions “in” the section are
@@ -103,7 +109,7 @@ itself ([`Heading`][heading]) to check if it’s the one to look for.
 
 `Boolean?`, `true` if this is the heading to use.
 
-#### `function onrun(start, nodes, end?, scope)`
+#### `function handler(start, nodes, end?, scope)`
 
 Callback invoked when a range is found.
 
@@ -131,14 +137,14 @@ Extra info (`Object`):
 
 ## Security
 
-Improper use of `onrun` can open you up to a [cross-site scripting (XSS)][xss]
+Improper use of `handler` can open you up to a [cross-site scripting (XSS)][xss]
 attack as the value it returns is injected into the syntax tree.
 This can become a problem if the tree is later transformed to [**hast**][hast].
 The following example shows how a script is injected that could run when loaded
 in a browser.
 
 ```js
-function onrun(start, nodes, end) {
+function handler(start, nodes, end) {
   return [start, {type: 'html', value: 'alert(1)'}, end]
 }
 ```
@@ -153,7 +159,8 @@ Yields:
 # Baz
 ```
 
-Either do not use user input in `onrun` or use [`hast-util-santize`][sanitize].
+Either do not use user input in `handler` or use
+[`hast-util-santize`][sanitize].
 
 ## Related
 
@@ -218,7 +225,7 @@ abide by its terms.
 
 [node]: https://github.com/syntax-tree/unist#node
 
-[onrun]: #function-onrunstart-nodes-end-scope
+[handler]: #function-handlerstart-nodes-end-scope
 
 [heading]: https://github.com/syntax-tree/mdast#heading
 

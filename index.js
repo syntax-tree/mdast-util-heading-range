@@ -1,13 +1,8 @@
-'use strict'
-
-var toString = require('mdast-util-to-string')
-
-module.exports = headingRange
-
-var splice = [].splice
+import {toString} from 'mdast-util-to-string'
 
 // Search `node` with `options` and invoke `callback`.
-function headingRange(node, options, callback) {
+// eslint-disable-next-line complexity
+export function headingRange(node, options, callback) {
   var test = options
   var children = node.children
   var index = -1
@@ -36,7 +31,7 @@ function headingRange(node, options, callback) {
   }
 
   if (typeof test !== 'function') {
-    throw new Error(
+    throw new TypeError(
       'Expected `string`, `regexp`, or `function` for `test`, not `' +
         test +
         '`'
@@ -79,7 +74,7 @@ function headingRange(node, options, callback) {
       children[end],
       {
         parent: node,
-        start: start,
+        start,
         end: children[end] ? end : null
       }
     )
@@ -94,7 +89,7 @@ function headingRange(node, options, callback) {
         if (nodes[index]) result.push(nodes[index])
       }
 
-      splice.apply(children, [start, end - start + 1].concat(result))
+      children.splice(start, end - start + 1, ...result)
     }
   }
 }

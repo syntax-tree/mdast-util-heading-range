@@ -1,8 +1,5 @@
 .DS_Store
 *.log
-.nyc_output/
 coverage/
 node_modules/
-mdast-util-heading-range.js
-mdast-util-heading-range.min.js
 yarn.lock
