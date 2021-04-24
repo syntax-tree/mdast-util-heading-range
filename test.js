@@ -128,8 +128,8 @@ test('mdast-util-heading-range()', function (t) {
     })
     .process(
       ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-      function (err, file) {
-        t.ifError(err, 'should not fail (#1)')
+      function (error, file) {
+        t.ifError(error, 'should not fail (#1)')
 
         t.equal(
           String(file),
@@ -149,8 +149,8 @@ test('mdast-util-heading-range()', function (t) {
     })
     .process(
       ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-      function (err, file) {
-        t.ifError(err, 'should not fail (#2)')
+      function (error, file) {
+        t.ifError(error, 'should not fail (#2)')
 
         t.equal(
           String(file),
@@ -170,8 +170,8 @@ test('mdast-util-heading-range()', function (t) {
     })
     .process(
       ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
-      function (err, file) {
-        t.ifError(err, 'should not fail (#3)')
+      function (error, file) {
+        t.ifError(error, 'should not fail (#3)')
 
         t.equal(
           String(file),
@@ -195,8 +195,8 @@ test('mdast-util-heading-range()', function (t) {
       ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
         '\n'
       ),
-      function (err, file) {
-        t.ifError(err, 'should not fail (#4)')
+      function (error, file) {
+        t.ifError(error, 'should not fail (#4)')
 
         t.equal(
           String(file),
