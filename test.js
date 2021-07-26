@@ -1,6 +1,7 @@
 /**
  * @typedef {import('tape').Test} Test
  * @typedef {import('unist').Node} Node
+ * @typedef {import('mdast').Root} Root
  * @typedef {import('./index.js').Test | import('./index.js').Options} Options
  */
 
@@ -15,7 +16,11 @@ test('mdast-util-heading-range()', function (t) {
 
   t.throws(
     function () {
-      headingRange({type: 'root', chilren: []}, null, function () {})
+      headingRange(
+        /** @type {Root} */ ({type: 'root', children: []}),
+        null,
+        function () {}
+      )
     },
     /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
     'should throw when `null` is passed in'
@@ -23,7 +28,11 @@ test('mdast-util-heading-range()', function (t) {
 
   t.throws(
     function () {
-      headingRange({type: 'root', chilren: []}, undefined, function () {})
+      headingRange(
+        /** @type {Root} */ ({type: 'root', children: []}),
+        undefined,
+        function () {}
+      )
     },
     /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
     'should throw when `undefined` is passed in'

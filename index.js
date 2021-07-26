@@ -82,6 +82,7 @@ export function headingRange(node, options, handler) {
     child = children[index]
 
     if (child.type === 'heading') {
+      // @ts-expect-error: looks like a heading.
       if (depth && child.depth <= depth) {
         end = index
         break
