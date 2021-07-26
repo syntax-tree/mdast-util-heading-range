@@ -36,30 +36,26 @@ Bar.
 And our script, `example.js`, looks as follows:
 
 ```js
-import toVFile from 'to-vfile'
-import remark from 'remark'
+import {readSync} from 'to-vfile'
+import {remark} from 'remark'
 import {headingRange} from 'mdast-util-heading-range'
+
+const file = readSync('example.md')
 
 remark()
   .use(plugin)
-  .process(vfile.readSync('example.md'), function(err, file) {
-    if (err) throw err
+  .process(file)
+  .then((file) => {
     console.log(String(file))
   })
 
 function plugin() {
-  return transform
-
-  function transform(tree) {
-    headingRange(tree, 'foo', handler)
-  }
-
-  function handler(start, nodes, end) {
-    return [
+  return (tree) => {
+    headingRange(tree, 'foo', (start, nodes, end) => [
       start,
       {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
       end
-    ]
+    ])
   }
 }
 ```

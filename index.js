@@ -33,25 +33,12 @@ import {toString} from 'mdast-util-to-string'
  */
 // eslint-disable-next-line complexity
 export function headingRange(node, options, handler) {
-  var test = options
+  let test = options
   /** @type {Array.<Node>} */
   // @ts-ignore looks like children.
-  var children = node.children || []
-  var index = -1
+  const children = node.children || []
   /** @type {boolean} */
-  var ignoreFinalDefinitions
-  /** @type {number} */
-  var depth
-  /** @type {number} */
-  var start
-  /** @type {number} */
-  var end
-  /** @type {Array.<Node>} */
-  var nodes
-  /** @type {Array.<Node>} */
-  var result
-  /** @type {Node} */
-  var child
+  let ignoreFinalDefinitions
 
   // Object, not regex.
   if (test && typeof test === 'object' && !('exec' in test)) {
@@ -77,9 +64,17 @@ export function headingRange(node, options, handler) {
     )
   }
 
+  let index = -1
+  /** @type {number} */
+  let start
+  /** @type {number} */
+  let end
+  /** @type {number} */
+  let depth
+
   // Find the range.
   while (++index < children.length) {
-    child = children[index]
+    const child = children[index]
 
     if (child.type === 'heading') {
       // @ts-expect-error: looks like a heading.
@@ -110,23 +105,21 @@ export function headingRange(node, options, handler) {
       }
     }
 
-    nodes = handler(
+    /** @type {Array.<Node>} */
+    const nodes = handler(
       // @ts-ignore `start` points to a heading.
       children[start],
       children.slice(start + 1, end),
       children[end],
-      {
-        parent: node,
-        start,
-        end: children[end] ? end : null
-      }
+      {parent: node, start, end: children[end] ? end : null}
     )
 
     if (nodes) {
       // Ensure no empty nodes are inserted.
       // This could be the case if `end` is in `nodes` but no `end` node exists.
-      result = []
-      index = -1
+      /** @type {Array.<Node>} */
+      const result = []
+      let index = -1
 
       while (++index < nodes.length) {
         if (nodes[index]) result.push(nodes[index])

@@ -9,17 +9,17 @@ import test from 'tape'
 import remark from 'remark'
 import {headingRange} from './index.js'
 
-test('mdast-util-heading-range()', function (t) {
-  t.plan(57)
+test('mdast-util-heading-range()', (t) => {
+  t.plan(58)
 
   t.equal(typeof headingRange, 'function', 'should be a function')
 
   t.throws(
-    function () {
+    () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
         null,
-        function () {}
+        () => {}
       )
     },
     /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `null`$/,
@@ -27,16 +27,20 @@ test('mdast-util-heading-range()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
         undefined,
-        function () {}
+        () => {}
       )
     },
     /^TypeError: Expected `string`, `regexp`, or `function` for `test`, not `undefined`$/,
     'should throw when `undefined` is passed in'
   )
+
+  t.doesNotThrow(() => {
+    headingRange(/** @type {Root} */ ({type: 'root'}), 'x', () => {})
+  }, 'should not throw when a non-parent is passed')
 
   t.equal(
     process(
@@ -63,7 +67,7 @@ test('mdast-util-heading-range()', function (t) {
       t,
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       /** @type {Options} */
-      function (value) {
+      (value) => {
         return value.toLowerCase().indexOf('foo') === 0
       }
     ),
@@ -133,58 +137,52 @@ test('mdast-util-heading-range()', function (t) {
   )
 
   remark()
-    .use(function () {
+    .use(() => {
       return function (node) {
-        headingRange(node, 'foo', function () {
+        headingRange(node, 'foo', () => {
           return null
         })
       }
     })
-    .process(
-      ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-      function (error, file) {
-        t.ifError(error, 'should not fail (#1)')
+    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
+      t.ifError(error, 'should not fail (#1)')
 
-        t.equal(
-          String(file),
-          ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-          'should not remove anything when `null` is given'
-        )
-      }
-    )
+      t.equal(
+        String(file),
+        ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
+        'should not remove anything when `null` is given'
+      )
+    })
 
   remark()
-    .use(function () {
+    .use(() => {
       return function (node) {
-        headingRange(node, 'foo', function () {
+        headingRange(node, 'foo', () => {
           return []
         })
       }
     })
-    .process(
-      ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-      function (error, file) {
-        t.ifError(error, 'should not fail (#2)')
+    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
+      t.ifError(error, 'should not fail (#2)')
 
-        t.equal(
-          String(file),
-          ['Foo', ''].join('\n'),
-          'should replace all previous nodes otherwise'
-        )
-      }
-    )
+      t.equal(
+        String(file),
+        ['Foo', ''].join('\n'),
+        'should replace all previous nodes otherwise'
+      )
+    })
 
   remark()
-    .use(function () {
+    .use(() => {
       return function (node) {
-        headingRange(node, 'foo', function (start, _, end) {
+        headingRange(node, 'foo', (start, _, end) => {
           return [start, {type: 'thematicBreak'}, end]
         })
       }
     })
     .process(
       ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
-      function (error, file) {
+      (error, file) => {
         t.ifError(error, 'should not fail (#3)')
 
         t.equal(
@@ -196,9 +194,9 @@ test('mdast-util-heading-range()', function (t) {
     )
 
   remark()
-    .use(function () {
+    .use(() => {
       return function (node) {
-        headingRange(node, 'foo', function (start, nodes, end) {
+        headingRange(node, 'foo', (start, nodes, end) => {
           t.equal(nodes.length, 3)
           return [start, ...nodes, end]
         })
@@ -208,7 +206,7 @@ test('mdast-util-heading-range()', function (t) {
       ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
         '\n'
       ),
-      function (error, file) {
+      (error, file) => {
         t.ifError(error, 'should not fail (#4)')
 
         t.equal(
@@ -325,9 +323,9 @@ test('mdast-util-heading-range()', function (t) {
  */
 function process(t, value, options) {
   return remark()
-    .use(function () {
+    .use(() => {
       return function (node) {
-        headingRange(node, options, function (start, _, end, scope) {
+        headingRange(node, options, (start, _, end, scope) => {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
           t.equal(scope.parent.type, 'root')
