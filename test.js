@@ -69,9 +69,7 @@ test('mdast-util-heading-range()', (t) => {
       t,
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       /** @type {Options} */
-      (value) => {
-        return value.toLowerCase().indexOf('foo') === 0
-      }
+      (value) => value.toLowerCase().indexOf('foo') === 0
     ),
     ['# Fo', '', '## Fooooo', '', '# Fo', ''].join('\n'),
     'should accept a heading as a function'
@@ -139,14 +137,13 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   remark()
-    .use(() => {
-      return function (node) {
-        const root = /** @type {Root} */ (node)
-        headingRange(root, 'foo', () => {
-          return null
-        })
-      }
-    })
+    .use(
+      () =>
+        function (node) {
+          const root = /** @type {Root} */ (node)
+          headingRange(root, 'foo', () => null)
+        }
+    )
     .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
       t.ifError(error, 'should not fail (#1)')
 
@@ -158,14 +155,13 @@ test('mdast-util-heading-range()', (t) => {
     })
 
   remark()
-    .use(() => {
-      return function (node) {
-        const root = /** @type {Root} */ (node)
-        headingRange(root, 'foo', () => {
-          return []
-        })
-      }
-    })
+    .use(
+      () =>
+        function (node) {
+          const root = /** @type {Root} */ (node)
+          headingRange(root, 'foo', () => [])
+        }
+    )
     .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
       t.ifError(error, 'should not fail (#2)')
 
@@ -177,14 +173,17 @@ test('mdast-util-heading-range()', (t) => {
     })
 
   remark()
-    .use(() => {
-      return function (node) {
-        const root = /** @type {Root} */ (node)
-        headingRange(root, 'foo', (start, _, end) => {
-          return [start, {type: 'thematicBreak'}, end]
-        })
-      }
-    })
+    .use(
+      () =>
+        function (node) {
+          const root = /** @type {Root} */ (node)
+          headingRange(root, 'foo', (start, _, end) => [
+            start,
+            {type: 'thematicBreak'},
+            end
+          ])
+        }
+    )
     .process(
       ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
       (error, file) => {
@@ -199,15 +198,16 @@ test('mdast-util-heading-range()', (t) => {
     )
 
   remark()
-    .use(() => {
-      return function (node) {
-        const root = /** @type {Root} */ (node)
-        headingRange(root, 'foo', (start, nodes, end) => {
-          t.equal(nodes.length, 3)
-          return [start, ...nodes, end]
-        })
-      }
-    })
+    .use(
+      () =>
+        function (node) {
+          const root = /** @type {Root} */ (node)
+          headingRange(root, 'foo', (start, nodes, end) => {
+            t.equal(nodes.length, 3)
+            return [start, ...nodes, end]
+          })
+        }
+    )
     .process(
       ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
         '\n'
@@ -329,17 +329,18 @@ test('mdast-util-heading-range()', (t) => {
  */
 function process(t, value, options) {
   return remark()
-    .use(() => {
-      return function (node) {
-        const root = /** @type {Root} */ (node)
-        headingRange(root, options, (start, _, end, scope) => {
-          t.equal(typeof scope.start, 'number')
-          t.assert(typeof scope.end === 'number' || scope.end === null)
-          t.equal(scope.parent && scope.parent.type, 'root')
-          return [start, end]
-        })
-      }
-    })
+    .use(
+      () =>
+        function (node) {
+          const root = /** @type {Root} */ (node)
+          headingRange(root, options, (start, _, end, scope) => {
+            t.equal(typeof scope.start, 'number')
+            t.assert(typeof scope.end === 'number' || scope.end === null)
+            t.equal(scope.parent && scope.parent.type, 'root')
+            return [start, end]
+          })
+        }
+    )
     .processSync(value)
     .toString()
 }
