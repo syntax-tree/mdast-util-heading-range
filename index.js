@@ -37,7 +37,7 @@ export function headingRange(node, options, handler) {
   /** @type {Array.<Node>} */
   // @ts-ignore looks like children.
   const children = node.children || []
-  /** @type {boolean} */
+  /** @type {boolean|undefined} */
   let ignoreFinalDefinitions
 
   // Object, not regex.
@@ -65,11 +65,11 @@ export function headingRange(node, options, handler) {
   }
 
   let index = -1
-  /** @type {number} */
+  /** @type {number|undefined} */
   let start
-  /** @type {number} */
+  /** @type {number|undefined} */
   let end
-  /** @type {number} */
+  /** @type {number|undefined} */
   let depth
 
   // Find the range.
@@ -95,7 +95,7 @@ export function headingRange(node, options, handler) {
   }
 
   // When we have a starting heading.
-  if (depth) {
+  if (depth && end !== undefined && start !== undefined) {
     if (ignoreFinalDefinitions) {
       while (
         children[end - 1].type === 'definition' ||

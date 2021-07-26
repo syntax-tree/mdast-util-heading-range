@@ -18,6 +18,7 @@ test('mdast-util-heading-range()', (t) => {
     () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
+        // @ts-expect-error: runtime.
         null,
         () => {}
       )
@@ -30,6 +31,7 @@ test('mdast-util-heading-range()', (t) => {
     () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
+        // @ts-expect-error: runtime.
         undefined,
         () => {}
       )
@@ -328,7 +330,7 @@ function process(t, value, options) {
         headingRange(node, options, (start, _, end, scope) => {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
-          t.equal(scope.parent.type, 'root')
+          t.equal(scope.parent && scope.parent.type, 'root')
           return [start, end]
         })
       }
