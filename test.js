@@ -1,7 +1,7 @@
 /**
  * @typedef {import('tape').Test} Test
- * @typedef {import('unist').Node} Node
  * @typedef {import('mdast').Root} Root
+ * @typedef {Root|import('mdast').Content} Node
  * @typedef {import('./index.js').Test | import('./index.js').Options} Options
  */
 
@@ -141,7 +141,8 @@ test('mdast-util-heading-range()', (t) => {
   remark()
     .use(() => {
       return function (node) {
-        headingRange(node, 'foo', () => {
+        const root = /** @type {Root} */ (node)
+        headingRange(root, 'foo', () => {
           return null
         })
       }
@@ -159,7 +160,8 @@ test('mdast-util-heading-range()', (t) => {
   remark()
     .use(() => {
       return function (node) {
-        headingRange(node, 'foo', () => {
+        const root = /** @type {Root} */ (node)
+        headingRange(root, 'foo', () => {
           return []
         })
       }
@@ -177,7 +179,8 @@ test('mdast-util-heading-range()', (t) => {
   remark()
     .use(() => {
       return function (node) {
-        headingRange(node, 'foo', (start, _, end) => {
+        const root = /** @type {Root} */ (node)
+        headingRange(root, 'foo', (start, _, end) => {
           return [start, {type: 'thematicBreak'}, end]
         })
       }
@@ -198,7 +201,8 @@ test('mdast-util-heading-range()', (t) => {
   remark()
     .use(() => {
       return function (node) {
-        headingRange(node, 'foo', (start, nodes, end) => {
+        const root = /** @type {Root} */ (node)
+        headingRange(root, 'foo', (start, nodes, end) => {
           t.equal(nodes.length, 3)
           return [start, ...nodes, end]
         })
@@ -327,7 +331,8 @@ function process(t, value, options) {
   return remark()
     .use(() => {
       return function (node) {
-        headingRange(node, options, (start, _, end, scope) => {
+        const root = /** @type {Root} */ (node)
+        headingRange(root, options, (start, _, end, scope) => {
           t.equal(typeof scope.start, 'number')
           t.assert(typeof scope.end === 'number' || scope.end === null)
           t.equal(scope.parent && scope.parent.type, 'root')

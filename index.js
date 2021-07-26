@@ -1,6 +1,6 @@
 /**
- * @typedef {import('unist').Node} Node
  * @typedef {import('unist').Parent} Parent
+ * @typedef {import('mdast').Root|import('mdast').Content} Node
  * @typedef {import('mdast').Heading} Heading
  *
  * @typedef {(value: string, node: Heading) => boolean} TestFunction
@@ -35,8 +35,7 @@ import {toString} from 'mdast-util-to-string'
 export function headingRange(node, options, handler) {
   let test = options
   /** @type {Array.<Node>} */
-  // @ts-ignore looks like children.
-  const children = node.children || []
+  const children = 'children' in node ? node.children : []
   /** @type {boolean|undefined} */
   let ignoreFinalDefinitions
 
@@ -77,15 +76,12 @@ export function headingRange(node, options, handler) {
     const child = children[index]
 
     if (child.type === 'heading') {
-      // @ts-expect-error: looks like a heading.
       if (depth && child.depth <= depth) {
         end = index
         break
       }
 
-      // @ts-ignore looks like a heading.
       if (!depth && test(toString(child), child)) {
-        // @ts-ignore looks like a heading.
         depth = child.depth
         start = index
         // Assume no end heading is found.
@@ -107,7 +103,7 @@ export function headingRange(node, options, handler) {
 
     /** @type {Array.<Node>} */
     const nodes = handler(
-      // @ts-ignore `start` points to a heading.
+      // @ts-expect-error `start` points to a heading.
       children[start],
       children.slice(start + 1, end),
       children[end],
