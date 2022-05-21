@@ -8,17 +8,61 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**mdast**][mdast] utility to use headings as ranges.
+[mdast][] utility to find headings and replace the content in their section.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`headingRange(tree, test|options, handler)`](#headingrangetree-testoptions-handler)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that lets you find a certain heading, then takes the
+content in their section (from it to the next heading of the same or lower
+depth), and calls a given handler with the result, so that you can change or
+replace things.
+
+## When should I use this?
+
+This utility is typically useful when you have certain sections that can be
+generated.
+For example, this utility is used by [`remark-toc`][remark-toc] to update the
+above `Contents` heading.
+
+A similar package, [`mdast-zone`][mdast-zone], does the same but uses comments
+to mark the start and end of sections.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-heading-range
+```
+
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {headingRange} from 'https://esm.sh/mdast-util-heading-range@3'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {headingRange} from 'https://esm.sh/mdast-util-heading-range@3?bundle'
+</script>
 ```
 
 ## Use
@@ -33,23 +77,21 @@ Bar.
 # Baz
 ```
 
-And our script, `example.js`, looks as follows:
+…and a module `example.js`:
 
 ```js
-import {readSync} from 'to-vfile'
+import {read} from 'to-vfile'
 import {remark} from 'remark'
 import {headingRange} from 'mdast-util-heading-range'
 
-const file = readSync('example.md')
+const file = await remark()
+  .use(myPluginThatReplacesFoo)
+  .process(await read('example.md'))
 
-remark()
-  .use(plugin)
-  .process(file)
-  .then((file) => {
-    console.log(String(file))
-  })
+console.log(String(file))
 
-function plugin() {
+/** @type {import('unified').Plugin<[], import('mdast').Root>} */
+function myPluginThatReplacesFoo() {
   return (tree) => {
     headingRange(tree, 'foo', (start, nodes, end) => [
       start,
@@ -60,7 +102,7 @@ function plugin() {
 }
 ```
 
-Now, running `node example` yields:
+…now running `node example.js` yields:
 
 ```markdown
 # Foo
@@ -72,19 +114,17 @@ Qux.
 
 ## API
 
-This package exports the following identifiers: `headingRange`.
+This package exports the identifier `headingRange`.
 There is no default export.
 
 ### `headingRange(tree, test|options, handler)`
 
-Search `tree` ([`Node`][node]) and transform a section without affecting other
-parts with `handler` ([`Function`][handler]).
-A “section” is a heading that passes `test`, until the next heading of the same
-or lower depth, or the end of the document.
-If `ignoreFinalDefinitions: true`, final definitions “in” the section are
-excluded.
+Search `tree` ([`Node`][node]) and transform a section with `handler`
+([`Function`][handler]).
 
 ##### `options`
+
+Configuration (optional).
 
 ###### `options.test`
 
@@ -94,22 +134,25 @@ when `RegExp`, wrapped in `function (value) {expression.test(value)}`
 
 ###### `options.ignoreFinalDefinitions`
 
-Ignore final definitions otherwise in the section (`boolean`, default: `false`).
+Ignore trailing definitions otherwise in the section (`boolean`, default:
+`false`).
 
 #### `function test(value, node)`
 
-Function invoked for each heading with its content (`string`) and `node`
+Function called for each heading with its content (`string`) and `node`
 itself ([`Heading`][heading]) to check if it’s the one to look for.
 
 ###### Returns
 
-`Boolean?`, `true` if this is the heading to use.
+Whether to use this heading (`boolean`).
 
-#### `function handler(start, nodes, end?, scope)`
+#### `function handler(start, nodes, end, info)`
 
-Callback invoked when a range is found.
+Callback called when a range is found.
 
 ##### Parameters
+
+Arguments.
 
 ###### `start`
 
@@ -117,19 +160,32 @@ Start of range ([`Heading`][heading]).
 
 ###### `nodes`
 
-Nodes between `start` and `end` ([`Array.<Node>`][node]).
+Nodes between `start` and `end` ([`Array<Node>`][node]).
 
 ###### `end`
 
 End of range, if any ([`Node?`][node]).
 
-###### `scope`
+###### `info`
 
 Extra info (`Object`):
 
-*   `parent` ([`Node`][node]) — Parent of the range
-*   `start` (`number`) — Index of `start` in `parent`
-*   `end` (`number?`) — Index of `end` in `parent`
+*   `parent` ([`Node`][node]) — parent of the range
+*   `start` (`number`) — index of `start` in `parent`
+*   `end` (`number?`) — index of `end` in `parent`
+
+## Types
+
+This package is fully typed with [TypeScript][].
+This package exports the types `Handler`, `Options`, `TestFunction`, `Test`,
+and `ZoneInfo`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
@@ -140,6 +196,7 @@ The following example shows how a script is injected that could run when loaded
 in a browser.
 
 ```js
+/** @type {import('mdast-util-heading-range').Handler} */
 function handler(start, nodes, end) {
   return [start, {type: 'html', value: 'alert(1)'}, end]
 }
@@ -156,21 +213,21 @@ Yields:
 ```
 
 Either do not use user input in `handler` or use
-[`hast-util-santize`][sanitize].
+[`hast-util-santize`][hast-util-sanitize].
 
 ## Related
 
 *   [`mdast-zone`](https://github.com/syntax-tree/mdast-zone)
-    — comments as ranges or markers instead of headings
+    — similar but uses comments to mark the start and end of sections
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
-By interacting with this repository, organization, or community you agree to
+By interacting with this repository, organisation, or community you agree to
 abide by its terms.
 
 ## License
@@ -207,21 +264,29 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [mdast]: https://github.com/syntax-tree/mdast
 
 [node]: https://github.com/syntax-tree/unist#node
 
-[handler]: #function-handlerstart-nodes-end-scope
+[handler]: #function-handlerstart-nodes-end-info
 
 [heading]: https://github.com/syntax-tree/mdast#heading
 
@@ -231,4 +296,8 @@ abide by its terms.
 
 [hast]: https://github.com/syntax-tree/hast
 
-[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+[mdast-zone]: https://github.com/syntax-tree/mdast-zone
+
+[hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+
+[remark-toc]: https://github.com/remarkjs/remark-toc
