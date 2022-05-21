@@ -6,7 +6,7 @@
  */
 
 import test from 'tape'
-import remark from 'remark'
+import {remark} from 'remark'
 import {headingRange} from './index.js'
 
 test('mdast-util-heading-range()', (t) => {
