@@ -4,38 +4,61 @@
  * @typedef {import('mdast').Heading} Heading
  *
  * @typedef {(value: string, node: Heading) => boolean} TestFunction
+ *   Function called for each heading with its content and `node` itself check
+ *   if it’s the one to look for.
+ *
  * @typedef {string|RegExp|TestFunction} Test
  *
  * @typedef Options
+ *   Configuration (optional).
  * @property {Test} test
+ *   Heading to look for.
+ *   When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
+ *   when `RegExp`, wrapped in `function (value) {expression.test(value)}`
  * @property {boolean} [ignoreFinalDefinitions=false]
+ *   Ignore final definitions otherwise in the section.
  *
  * @typedef ZoneInfo
- * @property {number} start
- * @property {number} end
+ *   Extra info.
  * @property {Parent|null} parent
+ *   Parent of the range.
+ * @property {number} start
+ *   index of `start` in `parent`
+ * @property {number} end
+ *   index of `end` in `parent`
  *
  * @callback Handler
+ *   Callback called when a range is found.
  * @param {Heading|undefined} start
- * @param {Array.<Node>} between
+ *   Start of range.
+ * @param {Array<Node>} between
+ *   Nodes between `start` and `end`.
  * @param {Node|undefined} end
- * @param {ZoneInfo} info
+ *   End of range, if any.
+ * @param {ZoneInfo} scope
+ *   Extra info.
  */
 
 import {toString} from 'mdast-util-to-string'
 
 /**
- * Search `node` with `options` and invoke `callback`.
+ * Search `tree` and transform a section without affecting other parts with
+ * `handler`.
  *
- * @param {Node} node
+ * A “section” is a heading that passes `test`, until the next heading of the
+ * same or lower depth, or the end of the document.
+ * If `ignoreFinalDefinitions: true`, final definitions “in” the section are
+ * excluded.
+ *
+ * @param {Node} tree
  * @param {Test|Options} options
  * @param {Handler} handler
  */
 // eslint-disable-next-line complexity
-export function headingRange(node, options, handler) {
+export function headingRange(tree, options, handler) {
   let test = options
-  /** @type {Array.<Node>} */
-  const children = 'children' in node ? node.children : []
+  /** @type {Array<Node>} */
+  const children = 'children' in tree ? tree.children : []
   /** @type {boolean|undefined} */
   let ignoreFinalDefinitions
 
@@ -101,19 +124,19 @@ export function headingRange(node, options, handler) {
       }
     }
 
-    /** @type {Array.<Node>} */
+    /** @type {Array<Node>} */
     const nodes = handler(
       // @ts-expect-error `start` points to a heading.
       children[start],
       children.slice(start + 1, end),
       children[end],
-      {parent: node, start, end: children[end] ? end : null}
+      {parent: tree, start, end: children[end] ? end : null}
     )
 
     if (nodes) {
       // Ensure no empty nodes are inserted.
       // This could be the case if `end` is in `nodes` but no `end` node exists.
-      /** @type {Array.<Node>} */
+      /** @type {Array<Node>} */
       const result = []
       let index = -1
 
