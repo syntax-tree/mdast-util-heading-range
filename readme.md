@@ -198,7 +198,7 @@ in a browser.
 ```js
 /** @type {import('mdast-util-heading-range').Handler} */
 function handler(start, nodes, end) {
-  return [start, {type: 'html', value: 'alert(1)'}, end]
+  return [start, {type: 'html', value: '<script>alert(1)</script>'}, end]
 }
 ```
 
