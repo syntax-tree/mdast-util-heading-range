@@ -163,6 +163,14 @@ Callback called when a section is found (TypeScript type).
 *   `info` ([`Info`][api-info])
     — extra info
 
+###### Returns
+
+Results (`Array<Node | null | undefined>`, optional).
+
+If nothing is returned, nothing will be changed.
+If an array of nodes (can include `null` and `undefined`) is returned, the
+original section will be replaced by those nodes.
+
 ### `Info`
 
 Extra info (TypeScript type).
@@ -175,14 +183,6 @@ Extra info (TypeScript type).
     — index of `start` in `parent`
 *   `end` (`number` or `null`)
     — index of `end` in `parent`
-
-###### Returns
-
-Results (`Array<Node | null | undefined>`, optional).
-
-If nothing is returned, nothing will be changed.
-If an array of nodes (can include `null` and `undefined`) is returned, the
-original section will be replaced by those nodes.
 
 ### `Options`
 
