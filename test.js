@@ -5,17 +5,15 @@
  */
 
 import assert from 'node:assert/strict'
-import test from 'tape'
+import test from 'node:test'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {headingRange} from './index.js'
 
-test('mdast-util-heading-range()', (t) => {
-  t.plan(21)
+test('mdast-util-heading-range()', () => {
+  assert.equal(typeof headingRange, 'function', 'should be a function')
 
-  t.equal(typeof headingRange, 'function', 'should be a function')
-
-  t.throws(
+  assert.throws(
     () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
@@ -28,7 +26,7 @@ test('mdast-util-heading-range()', (t) => {
     'should throw when `null` is passed in'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       headingRange(
         /** @type {Root} */ ({type: 'root', children: []}),
@@ -41,11 +39,11 @@ test('mdast-util-heading-range()', (t) => {
     'should throw when `undefined` is passed in'
   )
 
-  t.doesNotThrow(() => {
+  assert.doesNotThrow(() => {
     headingRange(/** @type {Root} */ ({type: 'root'}), 'x', () => {})
   }, 'should not throw when a non-parent is passed')
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
@@ -54,7 +52,7 @@ test('mdast-util-heading-range()', (t) => {
     'should accept a heading as string'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       /foo+/i
@@ -63,7 +61,7 @@ test('mdast-util-heading-range()', (t) => {
     'should accept a heading as a regex'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       (value) => value.toLowerCase().indexOf('foo') === 0
@@ -72,13 +70,13 @@ test('mdast-util-heading-range()', (t) => {
     'should accept a heading as a function'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(['# Fo', '', '## Fooooo', '', 'Bar', ''].join('\n'), 'foo+'),
     ['# Fo', '', '## Fooooo', ''].join('\n'),
     'should accept a missing closing heading'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# Fo', '', '## ![Foo](bar.png)', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
@@ -87,7 +85,7 @@ test('mdast-util-heading-range()', (t) => {
     'should accept images'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# Fo', '', '## [Foo](bar.com)', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
@@ -96,7 +94,7 @@ test('mdast-util-heading-range()', (t) => {
     'should accept links'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       [
         '# Fo',
@@ -114,13 +112,13 @@ test('mdast-util-heading-range()', (t) => {
     'should accept an image in a link'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(['# Fo', '', '## Bar', '', 'Baz', ''].join('\n'), 'foo+'),
     ['# Fo', '', '## Bar', '', 'Baz', ''].join('\n'),
     'should not fail without heading'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       ['# ', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
       'fo+'
@@ -131,7 +129,7 @@ test('mdast-util-heading-range()', (t) => {
 
   const treeNull = fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
   headingRange(treeNull, 'foo', () => null)
-  t.equal(
+  assert.equal(
     toMarkdown(treeNull),
     ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
     'should not remove anything when `null` is given'
@@ -141,7 +139,7 @@ test('mdast-util-heading-range()', (t) => {
     ['Foo', '', '## Foo', '', 'Bar', ''].join('\n')
   )
   headingRange(treeEmpty, 'foo', () => [])
-  t.equal(
+  assert.equal(
     toMarkdown(treeEmpty),
     ['Foo', ''].join('\n'),
     'should replace all previous nodes otherwise'
@@ -155,7 +153,7 @@ test('mdast-util-heading-range()', (t) => {
     {type: 'thematicBreak'},
     end
   ])
-  t.equal(
+  assert.equal(
     toMarkdown(treeFilled),
     ['Foo', '', '## Foo', '', '***', '', '## Baz', ''].join('\n'),
     'should insert all returned nodes'
@@ -165,16 +163,16 @@ test('mdast-util-heading-range()', (t) => {
     ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join('\n')
   )
   headingRange(treeEmptyEnd, 'foo', (start, nodes, end) => {
-    t.equal(nodes.length, 3)
+    assert.equal(nodes.length, 3)
     return [start, ...nodes, end]
   })
-  t.equal(
+  assert.equal(
     toMarkdown(treeEmptyEnd),
     ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join('\n'),
     'should not insert an empty `end`'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       [
         '# Fo',
@@ -207,7 +205,7 @@ test('mdast-util-heading-range()', (t) => {
     'ignoreFinalDefinitions: should exclude definitions with an end heading'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       [
         '# Fo',
@@ -238,7 +236,7 @@ test('mdast-util-heading-range()', (t) => {
     'ignoreFinalDefinitions: should exclude only definitions'
   )
 
-  t.equal(
+  assert.equal(
     checkAndRemove(
       [
         '# Fo',
