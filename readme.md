@@ -18,6 +18,11 @@
 *   [Use](#use)
 *   [API](#api)
     *   [`headingRange(tree, test|options, handler)`](#headingrangetree-testoptions-handler)
+    *   [`Handler`](#handler)
+    *   [`Options`](#options)
+    *   [`Test`](#test)
+    *   [`TestFunction`](#testfunction)
+    *   [`ZoneInfo`](#zoneinfo)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -45,7 +50,7 @@ to mark the start and end of sections.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-heading-range
@@ -114,77 +119,122 @@ Qux.
 
 ## API
 
-This package exports the identifier `headingRange`.
+This package exports the identifier [`headingRange`][api-headingrange].
 There is no default export.
 
 ### `headingRange(tree, test|options, handler)`
 
-Search `tree` ([`Node`][node]) and transform a section with `handler`
-([`Function`][handler]).
+Search `tree` for a heading matching `test` and change its “section” with
+`handler`.
 
-##### `options`
+A “section” ranges from the matched heading until the next heading of the
+same or lower depth, or the end of the document.
 
-Configuration (optional).
+If `ignoreFinalDefinitions: true`, final definitions “in” the section are
+excluded.
 
-###### `options.test`
+###### Parameters
 
-Heading to look for (`string`, `RegExp`, [`Function`][test]).
-When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
-when `RegExp`, wrapped in `function (value) {expression.test(value)}`
-
-###### `options.ignoreFinalDefinitions`
-
-Ignore trailing definitions otherwise in the section (`boolean`, default:
-`false`).
-
-#### `function test(value, node)`
-
-Function called for each heading with its content (`string`) and `node`
-itself ([`Heading`][heading]) to check if it’s the one to look for.
+*   `tree` ([`Node`][node])
+    — tree to change
+*   `test` ([`Test`][api-test])
+    — same as passing `{test: Test}`
+*   `options` ([`Options`][api-options])
+    — configuration
+*   `handler` ([`Handler`][api-handler])
+    — handle a section
 
 ###### Returns
 
-Whether to use this heading (`boolean`).
+Nothing (`void`).
 
-#### `function handler(start, nodes, end, info)`
+### `Handler`
 
-Callback called when a range is found.
+Callback called when a section is found (TypeScript type).
 
-##### Parameters
+###### Parameters
 
-Arguments.
+*   `start` ([`Heading`][heading])
+    — start of section (a heading node matching `test`)
+*   `nodes` ([`Array<Node>`][node])
+    — nodes between `start` and `end`
+*   `end` ([`Node`][node] or `undefined`)
+    — end of section, if any
+*   `info` ([`ZoneInfo`][api-zoneinfo])
+    — extra info
 
-###### `start`
+###### Returns
 
-Start of range ([`Heading`][heading]).
+Results (`Array<Node | null | undefined>`, optional).
 
-###### `nodes`
+If nothing is returned, nothing will be changed.
+If an array of nodes (can include `null` and `undefined`) is returned, the
+original section will be replaced by those nodes.
 
-Nodes between `start` and `end` ([`Array<Node>`][node]).
+### `Options`
 
-###### `end`
+Configuration (TypeScript type).
 
-End of range, if any ([`Node?`][node]).
+###### Fields
 
-###### `info`
+*   `test` ([`Test`][api-test])
+    — test for a heading
+*   `ignoreFinalDefinitions` (`boolean`, default: `false`)
+    — ignore final definitions otherwise in the section
 
-Extra info (`Object`):
+### `Test`
 
-*   `parent` ([`Node`][node]) — parent of the range
-*   `start` (`number`) — index of `start` in `parent`
-*   `end` (`number?`) — index of `end` in `parent`
+Test for a heading (TypeScript type).
+
+When `string`, wrapped in `new RegExp('^(' + value + ')$', 'i')`;
+when `RegExp`, wrapped in `(value) => expression.test(value)`
+
+###### Type
+
+```ts
+export type Test = string | RegExp | TestFunction
+```
+
+### `TestFunction`
+
+Check if a node matches (TypeScript type).
+
+###### Parameters
+
+*   `value` (`string`)
+    — plain-text heading
+*   `node` ([`Heading`][heading])
+    — heading node
+
+###### Returns
+
+Whether this is the heading that is searched for (`boolean`, optional).
+
+### `ZoneInfo`
+
+Extra info (TypeScript type).
+
+###### Fields
+
+*   `parent` ([`Node`][node])
+    — parent of the section
+*   `start` (`number`)
+    — index of `start` in `parent`
+*   `end` (`number` or `null`)
+    — index of `end` in `parent`
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-This package exports the types `Handler`, `Options`, `TestFunction`, `Test`,
-and `ZoneInfo`.
+This package exports the types [`Handler`][api-handler],
+[`Options`][api-options], [`Test`][api-test],
+[`TestFunction`][api-testfunction], and [`ZoneInfo`][api-zoneinfo].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
@@ -286,11 +336,7 @@ abide by its terms.
 
 [node]: https://github.com/syntax-tree/unist#node
 
-[handler]: #function-handlerstart-nodes-end-info
-
 [heading]: https://github.com/syntax-tree/mdast#heading
-
-[test]: #function-testvalue-node
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
@@ -301,3 +347,15 @@ abide by its terms.
 [hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
 
 [remark-toc]: https://github.com/remarkjs/remark-toc
+
+[api-headingrange]: #headingrangetree-testoptions-handler
+
+[api-handler]: #handler
+
+[api-options]: #options
+
+[api-test]: #test
+
+[api-testfunction]: #testfunction
+
+[api-zoneinfo]: #zoneinfo
