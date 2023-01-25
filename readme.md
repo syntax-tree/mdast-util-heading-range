@@ -19,10 +19,10 @@
 *   [API](#api)
     *   [`headingRange(tree, test|options, handler)`](#headingrangetree-testoptions-handler)
     *   [`Handler`](#handler)
+    *   [`Info`](#info)
     *   [`Options`](#options)
     *   [`Test`](#test)
     *   [`TestFunction`](#testfunction)
-    *   [`ZoneInfo`](#zoneinfo)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -160,8 +160,21 @@ Callback called when a section is found (TypeScript type).
     — nodes between `start` and `end`
 *   `end` ([`Node`][node] or `undefined`)
     — end of section, if any
-*   `info` ([`ZoneInfo`][api-zoneinfo])
+*   `info` ([`Info`][api-info])
     — extra info
+
+### `Info`
+
+Extra info (TypeScript type).
+
+###### Fields
+
+*   `parent` ([`Node`][node])
+    — parent of the section
+*   `start` (`number`)
+    — index of `start` in `parent`
+*   `end` (`number` or `null`)
+    — index of `end` in `parent`
 
 ###### Returns
 
@@ -210,25 +223,12 @@ Check if a node matches (TypeScript type).
 
 Whether this is the heading that is searched for (`boolean`, optional).
 
-### `ZoneInfo`
-
-Extra info (TypeScript type).
-
-###### Fields
-
-*   `parent` ([`Node`][node])
-    — parent of the section
-*   `start` (`number`)
-    — index of `start` in `parent`
-*   `end` (`number` or `null`)
-    — index of `end` in `parent`
-
 ## Types
 
 This package is fully typed with [TypeScript][].
 This package exports the types [`Handler`][api-handler],
-[`Options`][api-options], [`Test`][api-test],
-[`TestFunction`][api-testfunction], and [`ZoneInfo`][api-zoneinfo].
+[`Info`][api-info], [`Options`][api-options], [`Test`][api-test],
+and [`TestFunction`][api-testfunction].
 
 ## Compatibility
 
@@ -358,4 +358,4 @@ abide by its terms.
 
 [api-testfunction]: #testfunction
 
-[api-zoneinfo]: #zoneinfo
+[api-info]: #info
