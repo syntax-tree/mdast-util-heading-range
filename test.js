@@ -9,8 +9,15 @@ import test from 'node:test'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {headingRange} from './index.js'
+import * as mod from './index.js'
 
-test('mdast-util-heading-range()', () => {
+test('headingRange', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['headingRange'],
+    'should expose the public api'
+  )
+
   assert.equal(typeof headingRange, 'function', 'should be a function')
 
   assert.throws(
