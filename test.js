@@ -1,16 +1,17 @@
 /**
- * @typedef {import('tape').Test} Test
  * @typedef {import('mdast').Root} Root
- * @typedef {Root|import('mdast').Content} Node
- * @typedef {import('./index.js').Test | import('./index.js').Options} Options
+ * @typedef {import('./index.js').Test} Test
+ * @typedef {import('./index.js').Options} Options
  */
 
+import assert from 'node:assert/strict'
 import test from 'tape'
-import {remark} from 'remark'
+import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toMarkdown} from 'mdast-util-to-markdown'
 import {headingRange} from './index.js'
 
 test('mdast-util-heading-range()', (t) => {
-  t.plan(58)
+  t.plan(21)
 
   t.equal(typeof headingRange, 'function', 'should be a function')
 
@@ -45,8 +46,7 @@ test('mdast-util-heading-range()', (t) => {
   }, 'should not throw when a non-parent is passed')
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
     ),
@@ -55,8 +55,7 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
       /foo+/i
     ),
@@ -65,10 +64,8 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# Fo', '', '## Fooooo', '', 'Bar', '', '# Fo', ''].join('\n'),
-      /** @type {Options} */
       (value) => value.toLowerCase().indexOf('foo') === 0
     ),
     ['# Fo', '', '## Fooooo', '', '# Fo', ''].join('\n'),
@@ -76,14 +73,13 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(t, ['# Fo', '', '## Fooooo', '', 'Bar', ''].join('\n'), 'foo+'),
+    checkAndRemove(['# Fo', '', '## Fooooo', '', 'Bar', ''].join('\n'), 'foo+'),
     ['# Fo', '', '## Fooooo', ''].join('\n'),
     'should accept a missing closing heading'
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# Fo', '', '## ![Foo](bar.png)', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
     ),
@@ -92,8 +88,7 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# Fo', '', '## [Foo](bar.com)', '', 'Bar', '', '# Fo', ''].join('\n'),
       'foo+'
     ),
@@ -102,8 +97,7 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       [
         '# Fo',
         '',
@@ -121,14 +115,13 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(t, ['# Fo', '', '## Bar', '', 'Baz', ''].join('\n'), 'foo+'),
+    checkAndRemove(['# Fo', '', '## Bar', '', 'Baz', ''].join('\n'), 'foo+'),
     ['# Fo', '', '## Bar', '', 'Baz', ''].join('\n'),
     'should not fail without heading'
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       ['# ', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
       'fo+'
     ),
@@ -136,98 +129,53 @@ test('mdast-util-heading-range()', (t) => {
     'should not fail with empty headings'
   )
 
-  remark()
-    .use(
-      () =>
-        function (node) {
-          const root = /** @type {Root} */ (node)
-          headingRange(root, 'foo', () => null)
-        }
-    )
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
-      t.ifError(error, 'should not fail (#1)')
+  const treeNull = fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
+  headingRange(treeNull, 'foo', () => null)
+  t.equal(
+    toMarkdown(treeNull),
+    ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
+    'should not remove anything when `null` is given'
+  )
 
-      t.equal(
-        String(file),
-        ['Foo', '', '## Foo', '', 'Bar', ''].join('\n'),
-        'should not remove anything when `null` is given'
-      )
-    })
+  const treeEmpty = fromMarkdown(
+    ['Foo', '', '## Foo', '', 'Bar', ''].join('\n')
+  )
+  headingRange(treeEmpty, 'foo', () => [])
+  t.equal(
+    toMarkdown(treeEmpty),
+    ['Foo', ''].join('\n'),
+    'should replace all previous nodes otherwise'
+  )
 
-  remark()
-    .use(
-      () =>
-        function (node) {
-          const root = /** @type {Root} */ (node)
-          headingRange(root, 'foo', () => [])
-        }
-    )
-    .process(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'), (error, file) => {
-      t.ifError(error, 'should not fail (#2)')
+  const treeFilled = fromMarkdown(
+    ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n')
+  )
+  headingRange(treeFilled, 'foo', (start, _, end) => [
+    start,
+    {type: 'thematicBreak'},
+    end
+  ])
+  t.equal(
+    toMarkdown(treeFilled),
+    ['Foo', '', '## Foo', '', '***', '', '## Baz', ''].join('\n'),
+    'should insert all returned nodes'
+  )
 
-      t.equal(
-        String(file),
-        ['Foo', ''].join('\n'),
-        'should replace all previous nodes otherwise'
-      )
-    })
-
-  remark()
-    .use(
-      () =>
-        function (node) {
-          const root = /** @type {Root} */ (node)
-          headingRange(root, 'foo', (start, _, end) => [
-            start,
-            {type: 'thematicBreak'},
-            end
-          ])
-        }
-    )
-    .process(
-      ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n'),
-      (error, file) => {
-        t.ifError(error, 'should not fail (#3)')
-
-        t.equal(
-          String(file),
-          ['Foo', '', '## Foo', '', '***', '', '## Baz', ''].join('\n'),
-          'should insert all returned nodes'
-        )
-      }
-    )
-
-  remark()
-    .use(
-      () =>
-        function (node) {
-          const root = /** @type {Root} */ (node)
-          headingRange(root, 'foo', (start, nodes, end) => {
-            t.equal(nodes.length, 3)
-            return [start, ...nodes, end]
-          })
-        }
-    )
-    .process(
-      ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
-        '\n'
-      ),
-      (error, file) => {
-        t.ifError(error, 'should not fail (#4)')
-
-        t.equal(
-          String(file),
-          ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
-            '\n'
-          ),
-          'should not insert an empty `end`'
-        )
-      }
-    )
+  const treeEmptyEnd = fromMarkdown(
+    ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join('\n')
+  )
+  headingRange(treeEmptyEnd, 'foo', (start, nodes, end) => {
+    t.equal(nodes.length, 3)
+    return [start, ...nodes, end]
+  })
+  t.equal(
+    toMarkdown(treeEmptyEnd),
+    ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join('\n'),
+    'should not insert an empty `end`'
+  )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       [
         '# Fo',
         '',
@@ -260,8 +208,7 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       [
         '# Fo',
         '',
@@ -292,8 +239,7 @@ test('mdast-util-heading-range()', (t) => {
   )
 
   t.equal(
-    process(
-      t,
+    checkAndRemove(
       [
         '# Fo',
         '',
@@ -323,24 +269,24 @@ test('mdast-util-heading-range()', (t) => {
 })
 
 /**
- * @param {Test} t
+ * Process a fixture, removing the section.
+ *
  * @param {string} value
- * @param {Options} options
+ *   Input markdown.
+ * @param {Test | Options} options
+ *   Configuration.
+ * @returns {string}
+ *   Output markdown.
  */
-function process(t, value, options) {
-  return remark()
-    .use(
-      () =>
-        function (node) {
-          const root = /** @type {Root} */ (node)
-          headingRange(root, options, (start, _, end, scope) => {
-            t.equal(typeof scope.start, 'number')
-            t.assert(typeof scope.end === 'number' || scope.end === null)
-            t.equal(scope.parent && scope.parent.type, 'root')
-            return [start, end]
-          })
-        }
-    )
-    .processSync(value)
-    .toString()
+function checkAndRemove(value, options) {
+  const tree = fromMarkdown(value)
+
+  headingRange(tree, options, (start, _, end, scope) => {
+    assert.equal(typeof scope.start, 'number')
+    assert.ok(typeof scope.end === 'number' || scope.end === null)
+    assert.equal(scope.parent && scope.parent.type, 'root')
+    return [start, end]
+  })
+
+  return toMarkdown(tree)
 }
