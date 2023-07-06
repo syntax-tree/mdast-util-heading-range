@@ -36,6 +36,7 @@
   "dependencies": {
     "@types/mdast": "^3.0.0",
     "@types/unist": "^2.0.0",
+    "devlop": "^1.1.0",
     "mdast-util-to-string": "^3.0.0"
   },
   "devDependencies": {

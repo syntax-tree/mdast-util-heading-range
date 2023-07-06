@@ -97,12 +97,14 @@ console.log(String(file))
 
 /** @type {import('unified').Plugin<[], import('mdast').Root>} */
 function myPluginThatReplacesFoo() {
-  return (tree) => {
-    headingRange(tree, 'foo', (start, nodes, end) => [
-      start,
-      {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
-      end
-    ])
+  return function (tree) {
+    headingRange(tree, 'foo', function (start, nodes, end) {
+      return [
+        start,
+        {type: 'paragraph', children: [{type: 'text', value: 'Qux.'}]},
+        end
+      ]
+    })
   }
 }
 ```
@@ -146,7 +148,7 @@ excluded.
 
 ###### Returns
 
-Nothing (`void`).
+Nothing (`undefined`).
 
 ### `Handler`
 
