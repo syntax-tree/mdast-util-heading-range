@@ -50,7 +50,7 @@ to mark the start and end of sections.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install mdast-util-heading-range
@@ -121,7 +121,7 @@ Qux.
 
 ## API
 
-This package exports the identifier [`headingRange`][api-headingrange].
+This package exports the identifier [`headingRange`][api-heading-range].
 There is no default export.
 
 ### `headingRange(tree, test|options, handler)`
@@ -207,7 +207,7 @@ when `RegExp`, wrapped in `(value) => expression.test(value)`
 ###### Type
 
 ```ts
-export type Test = string | RegExp | TestFunction
+export type Test = RegExp | TestFunction | string
 ```
 
 ### `TestFunction`
@@ -230,14 +230,17 @@ Whether this is the heading that is searched for (`boolean`, optional).
 This package is fully typed with [TypeScript][].
 This package exports the types [`Handler`][api-handler],
 [`Info`][api-info], [`Options`][api-options], [`Test`][api-test],
-and [`TestFunction`][api-testfunction].
+and [`TestFunction`][api-test-function].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line,
+`mdast-util-heading-range@^3`, compatible with Node.js 12.
 
 ## Security
 
@@ -300,9 +303,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/mdast-util-heading-range
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/mdast-util-heading-range.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=mdast-util-heading-range
 
-[size]: https://bundlephobia.com/result?p=mdast-util-heading-range
+[size]: https://bundlejs.com/?q=mdast-util-heading-range
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -350,7 +353,7 @@ abide by its terms.
 
 [remark-toc]: https://github.com/remarkjs/remark-toc
 
-[api-headingrange]: #headingrangetree-testoptions-handler
+[api-heading-range]: #headingrangetree-testoptions-handler
 
 [api-handler]: #handler
 
@@ -358,6 +361,6 @@ abide by its terms.
 
 [api-test]: #test
 
-[api-testfunction]: #testfunction
+[api-test-function]: #testfunction
 
 [api-info]: #info
