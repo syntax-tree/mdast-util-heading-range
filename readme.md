@@ -183,7 +183,7 @@ Extra info (TypeScript type).
     — parent of the section
 *   `start` (`number`)
     — index of `start` in `parent`
-*   `end` (`number` or `null`)
+*   `end` (`number` or `undefined`)
     — index of `end` in `parent`
 
 ### `Options`
