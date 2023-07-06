@@ -338,7 +338,7 @@ function checkAndRemove(value, options) {
 
   headingRange(tree, options, function (start, _, end, scope) {
     assert.equal(typeof scope.start, 'number')
-    assert.ok(typeof scope.end === 'number' || scope.end === null)
+    assert.ok(typeof scope.end === 'number' || scope.end === undefined)
     assert.equal(scope.parent && scope.parent.type, 'root')
     return [start, end]
   })
