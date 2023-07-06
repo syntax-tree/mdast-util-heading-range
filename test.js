@@ -43,7 +43,12 @@ test('headingRange', async function (t) {
       const tree = {type: 'inlineCode', value: 'asd'}
 
       assert.doesNotThrow(function () {
-        headingRange(tree, 'x', function () {})
+        headingRange(
+          // @ts-expect-error: types know that `InlineCode` can’t have `Heading` as a child.
+          tree,
+          'x',
+          function () {}
+        )
       })
     }
   )
