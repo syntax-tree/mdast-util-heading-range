@@ -1,21 +1,22 @@
 /**
  * @typedef {import('mdast').InlineCode} InlineCode
  * @typedef {import('mdast').Root} Root
- * @typedef {import('./index.js').Test} Test
- * @typedef {import('./index.js').Options} Options
+ * @typedef {import('mdast-util-heading-range').Test} Test
+ * @typedef {import('mdast-util-heading-range').Options} Options
  */
 
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
-import {headingRange} from './index.js'
+import {headingRange} from 'mdast-util-heading-range'
 
 test('headingRange', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
-      'headingRange'
-    ])
+    assert.deepEqual(
+      Object.keys(await import('mdast-util-heading-range')).sort(),
+      ['headingRange']
+    )
   })
 
   await t.test('should be a function', async function () {
