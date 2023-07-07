@@ -11,6 +11,8 @@ import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {headingRange} from 'mdast-util-heading-range'
 
+// To do: remove casts when `from-markdown` is released.
+
 test('headingRange', async function (t) {
   await t.test('should expose the public api', async function () {
     assert.deepEqual(
@@ -157,13 +159,16 @@ test('headingRange', async function (t) {
   await t.test(
     'should not remove anything when `null` is given',
     async function () {
-      const tree = fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
+      const tree = /** @type {Root} */ (
+        fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
+      )
 
       headingRange(tree, 'foo', function () {
         return null
       })
 
       assert.equal(
+        // @ts-expect-error: remove when `to-markdown` is released.
         toMarkdown(tree),
         ['Foo', '', '## Foo', '', 'Bar', ''].join('\n')
       )
@@ -173,19 +178,27 @@ test('headingRange', async function (t) {
   await t.test(
     'should replace all previous nodes otherwise',
     async function () {
-      const tree = fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
+      const tree = /** @type {Root} */ (
+        fromMarkdown(['Foo', '', '## Foo', '', 'Bar', ''].join('\n'))
+      )
 
       headingRange(tree, 'foo', function () {
         return []
       })
 
-      assert.equal(toMarkdown(tree), ['Foo', ''].join('\n'))
+      assert.equal(
+        // @ts-expect-error: remove when `to-markdown` is released.
+        toMarkdown(tree),
+        ['Foo', ''].join('\n')
+      )
     }
   )
 
   await t.test('should insert all returned nodes', async function () {
-    const tree = fromMarkdown(
-      ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n')
+    const tree = /** @type {Root} */ (
+      fromMarkdown(
+        ['Foo', '', '## Foo', '', 'Bar', '', '## Baz', ''].join('\n')
+      )
     )
 
     headingRange(tree, 'foo', function (start, _, end) {
@@ -193,15 +206,18 @@ test('headingRange', async function (t) {
     })
 
     assert.equal(
+      // @ts-expect-error: remove when `to-markdown` is released.
       toMarkdown(tree),
       ['Foo', '', '## Foo', '', '***', '', '## Baz', ''].join('\n')
     )
   })
 
   await t.test('should not insert an empty `end`', async function () {
-    const tree = fromMarkdown(
-      ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
-        '\n'
+    const tree = /** @type {Root} */ (
+      fromMarkdown(
+        ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
+          '\n'
+        )
       )
     )
 
@@ -211,6 +227,7 @@ test('headingRange', async function (t) {
     })
 
     assert.equal(
+      // @ts-expect-error: remove when `to-markdown` is released.
       toMarkdown(tree),
       ['# Alpha', '', '## Foo', '', 'one', '', 'two', '', 'three', ''].join(
         '\n'
@@ -335,7 +352,7 @@ test('headingRange', async function (t) {
  *   Output markdown.
  */
 function checkAndRemove(value, options) {
-  const tree = fromMarkdown(value)
+  const tree = /** @type {Root} */ (fromMarkdown(value))
 
   headingRange(tree, options, function (start, _, end, scope) {
     assert.equal(typeof scope.start, 'number')
@@ -344,5 +361,6 @@ function checkAndRemove(value, options) {
     return [start, end]
   })
 
+  // @ts-expect-error: remove when `to-markdown` is released.
   return toMarkdown(tree)
 }
