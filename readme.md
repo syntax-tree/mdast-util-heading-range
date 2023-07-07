@@ -59,14 +59,14 @@ npm install mdast-util-heading-range
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {headingRange} from 'https://esm.sh/mdast-util-heading-range@3'
+import {headingRange} from 'https://esm.sh/mdast-util-heading-range@4'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {headingRange} from 'https://esm.sh/mdast-util-heading-range@3?bundle'
+  import {headingRange} from 'https://esm.sh/mdast-util-heading-range@4?bundle'
 </script>
 ```
 
